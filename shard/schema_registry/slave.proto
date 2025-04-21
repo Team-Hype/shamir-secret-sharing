@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package slave;
+
+service Slave {
+  rpc PutSecretPart(SecretPart) returns (Key);
+
+  rpc GetSecretPart(Key) returns (SecretPart);
+}
+
+message Key {
+  uint64 key = 1;
+}
+
+message SecretPart {
+  Key key = 1;
+  bytes part = 2;
+}
+
