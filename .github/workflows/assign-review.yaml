@@ -6,9 +6,11 @@ on:
 jobs:
   assign:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write 
     steps:
       - name: Assign reviewers
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         with:
           script: |
             github.rest.pulls.requestReviewers({
