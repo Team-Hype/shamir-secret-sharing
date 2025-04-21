@@ -1,0 +1,6 @@
+# Hide build artifacts
+shamir_ss/*.c
+shamir_ss/*.so
+
+# Hide build directory
+build/
