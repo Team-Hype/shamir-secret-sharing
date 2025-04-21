@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-package slave;
-
 service Slave {
   rpc PutSecretPart(SecretPart) returns (Key);
 

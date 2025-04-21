@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-package master;
-
 service Master {
   rpc Connect(ConnectionRequest) returns (ConnectionResponse);
 }

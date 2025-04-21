@@ -1,16 +1,19 @@
 import argparse
 import sys
 
+import shard.slave as slave
+import shard.master as master
+
 def start_master():
     print("Starting in MASTER mode...")
-    # TODO
+    master.start()
 
 def start_slave(master_host):
     print(f"Starting in SLAVE mode... Connecting to Master at {master_host}")
-    # TODO
+    slave.start()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="SHamir\nAlgorithm\nReliability\nDistributed")
+    parser = argparse.ArgumentParser(description="SHamir Algorithm Reliable Distributed")
 
     parser.add_argument('--mode', choices=['master', 'slave'], required=True, help="Run mode: master or slave")
     parser.add_argument('--master-host', help="Master host address (required in slave mode)")
