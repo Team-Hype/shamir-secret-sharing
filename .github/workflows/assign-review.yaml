@@ -1,0 +1,19 @@
+name: Assign Reviewers
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign reviewers
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: ["peplxx", "Trunn5", "essence-666" ,"ellilin", "shiyanovn"],
+            })
