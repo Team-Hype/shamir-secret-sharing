@@ -1,19 +1,25 @@
 [project]
 name = "shamir-ss"
 version = "0.1.0"
-description = ""
+description = "Shamir's Secret Sharing implementation using Cython"
 authors = [
     {name = "peplxx",email = "91543105+peplxx@users.noreply.github.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
+    "cryptography (>=44.0.2,<45.0.0)"
 ]
 
 [tool.poetry]
-packages = [{include = "shamir_ss", from = "src"}]
+packages = [{include = "shamir_ss"}]
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+cython = "^3.0.12"
 
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools", "cython", "wheel"]
+build-backend = "setuptools.build_meta"
