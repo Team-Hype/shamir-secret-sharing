@@ -18,3 +18,4 @@
 ## References & Resources
 - [Original Shamir Paper](https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf)
 - [Interactive Shamir Web Demo](https://iancolechen.io/shamir/)
+- [Secret Sharing Explained Visually](https://www.youtube.com/watch?v=iFY5SyY3IMQ)
