@@ -15,7 +15,9 @@ class SlaveServer(cf_grpc.SlaveServicer):
         pass
 
 
-def start(port: str):
+def start(master_host: str, port: str):
+    # print(f"Connecting to Master at {master_host}") TODO Connect
+
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     cf_grpc.add_SlaveServicer_to_server(SlaveServer(), server)
 
