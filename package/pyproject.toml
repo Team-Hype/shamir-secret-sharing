@@ -19,6 +19,8 @@ packages = [{include = "shamir_ss"}]
 pytest = "^8.3.5"
 cython = "^3.0.12"
 setuptools = "^79.0.0"
+pre-commit = "^4.0.1"
+nox = "^2025.2.9"
 
 
 [build-system]

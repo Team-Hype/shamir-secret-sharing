@@ -5,7 +5,7 @@ extensions = [
     Extension(
         "shamir_ss.shamir",
         ["shamir_ss/shamir.pyx"],
-        extra_compile_args=["-O3"]
+        extra_compile_args=["-O3", "-march=native"]
     )
 ]
 

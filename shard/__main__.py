@@ -29,4 +29,3 @@ if __name__ == '__main__':
         start_slave(args.master_host)
 
     print("-- Shard --")
-
