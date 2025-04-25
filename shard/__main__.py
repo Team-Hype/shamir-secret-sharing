@@ -1,18 +1,24 @@
 import argparse
 import sys
 
-def start_master():
-    print("Starting in MASTER mode...")
-    # TODO
+import shard.slave as slave
+import shard.master as master
 
-def start_slave(master_host):
-    print(f"Starting in SLAVE mode... Connecting to Master at {master_host}")
-    # TODO
+def start_master(port: str):
+    print("Starting in MASTER mode...")
+    master.start(port)
+
+def start_slave(master_host, port):
+    print("Starting in SLAVE mode...")
+    slave.start(master_host, port=port)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="SHamir\nAlgorithm\nReliability\nDistributed")
+    print("-- Shard --")
+
+    parser = argparse.ArgumentParser(description="SHamir Algorithm Reliable Distributed")
 
     parser.add_argument('--mode', choices=['master', 'slave'], required=True, help="Run mode: master or slave")
+    parser.add_argument('--port', required=True, help="Grpc Server Port")
     parser.add_argument('--master-host', help="Master host address (required in slave mode)")
 
     args = parser.parse_args()
@@ -21,12 +27,11 @@ if __name__ == '__main__':
         if args.master_host:
             print("Error: --master-host should not be used in master mode.")
             sys.exit(1)
-        start_master()
+        start_master(args.port)
     elif args.mode == 'slave':
         if not args.master_host:
             print("Error: --master-host is required in slave mode.")
             sys.exit(1)
-        start_slave(args.master_host)
+        start_slave(args.master_host, args.port)
 
-    print("-- Shard --")
 

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$(basename $(pwd))" != "shard" ]; then
+    echo "Ошибка: скрипт должен быть запущен из директории 'shard'."
+    exit 1
+fi
+
 source scripts/utils.sh
 
 PROTO_DIR="schema_registry"
@@ -29,7 +34,7 @@ fi
 
 mkdir -p $OUT_DIR
 
-for PROTO_FILE in $PROTO_FILES
+for PROTO_FILE in $(find $PROTO_DIR -name "*.proto")
 do
     echo " - Compiling $PROTO_FILE..."
     python3 -m grpc_tools.protoc \
@@ -38,6 +43,12 @@ do
       --grpc_python_out=$OUT_DIR \
       --mypy_out=$OUT_DIR \
       $PROTO_FILE &> /dev/null
+done
+
+for GENERATED_FILE in $OUT_DIR/*.py
+do
+    sed -i 's/^import \(.*\)_pb2$/from shard.generated import \1_pb2/' $GENERATED_FILE
+    sed -i 's/^import \(.*\)_pb2_grpc$/from shard.generated import \1_pb2_grpc/' $GENERATED_FILE
 done
 
 colored_echo "✅  Compilation is finished. All files are in '$OUT_DIR'." green
