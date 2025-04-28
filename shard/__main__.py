@@ -14,7 +14,6 @@ def start_slave(master_host, port):
 
 if __name__ == '__main__':
     print("-- Shard --")
-
     parser = argparse.ArgumentParser(description="SHamir Algorithm Reliable Distributed")
 
     parser.add_argument('--mode', choices=['master', 'slave'], required=True, help="Run mode: master or slave")

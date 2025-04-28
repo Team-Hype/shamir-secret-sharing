@@ -1,21 +1,13 @@
-from db import SessionLocal, Session
+from shard.master.db import Session
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from fastapi import Depends, status, HTTPException
-from constants import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
+from shard.master.fastapi.constants import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from jose import jwt, JWTError
-from models import User
-
+from shard.master.fastapi.models import User
+from shard.master.db import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
