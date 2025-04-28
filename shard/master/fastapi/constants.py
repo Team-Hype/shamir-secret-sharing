@@ -1,4 +1,4 @@
-# Константы
+# costants
 DATABASE_URL = "sqlite:///master.db"
 SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
