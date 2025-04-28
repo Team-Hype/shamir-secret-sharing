@@ -1,16 +1,18 @@
+![PYPI](https://img.shields.io/pypi/v/shamir_ss.svg)
+![versions](https://img.shields.io/pypi/pyversions/shamir_ss.svg)
 # Shamir Secret Sharing Project
 ## Project Goals
 ### Core Components
- - [ ] Shamir crypto package
+ - [x] Shamir crypto package
  - [ ] Shamir CLI Application
  - [ ] Shard Distributed Secret Vault Implementation
  - [ ] WebUI Demonstration
 
 ### Automation & CI/CD
- - [ ] Python package deployment
+ - [x] Python package deployment
  - [ ] CI with Tests
  - [ ] Docker compose for Shard
- - [ ] Pre-commit linters & formatters
+ - [x] Pre-commit linters & formatters
 
 ## Shard Architecture Scheme
 ![Shard Architecture Scheme](/images/shard-scheme.png)

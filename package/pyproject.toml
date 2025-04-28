@@ -1,9 +1,9 @@
 [project]
 name = "shamir-ss"
-version = "0.1.1"
+version = "0.1.8"
 description = "Shamir's Secret Sharing implementation using Cython"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.9"
 keywords = ["cryptography", "shamir", "secret sharing"]
 license = {text = "MIT"}
 authors = [
@@ -11,8 +11,13 @@ authors = [
 ]
 
 classifiers = [
+    'Development Status :: 5 - Production/Stable',
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
@@ -21,7 +26,7 @@ classifiers = [
 
 [tool.poetry]
 name = "shamir-ss"
-version = "0.1.1"
+version = "0.1.8"
 description = "Shamir's Secret Sharing implementation using Cython"
 authors = [
     "peplxx <91543105+peplxx@users.noreply.github.com>",
