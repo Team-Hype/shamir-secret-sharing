@@ -1,10 +1,10 @@
 
-.PHONY: pre-commit-build
+.PHONY: package-build
 package-build:
 	poetry build
 	poetry run twine check dist/*
 
-.PHONY: pre-commit-upload
+.PHONY: package-upload
 package-upload: package-build
 	poetry run twine upload dist/*
 
