@@ -4,3 +4,16 @@ shamir_ss/*.so
 
 # Hide build directory
 build/
+
+# Ignore python cache
+*.pyc
+
+# Ignore pytest cache
+.pytest_cache/
+.ruff_cache/
+
+*.egg-info/
+dist/
+
+# Hide nox files
+.nox/

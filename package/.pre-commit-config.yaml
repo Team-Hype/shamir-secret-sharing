@@ -1,0 +1,35 @@
+# pre-commit install
+# pre-commit run --all-files
+
+default_stages:
+  - pre-commit
+  - pre-push
+  - manual
+repos:
+  - repo: https://github.com/MarcoGorelli/cython-lint
+    rev: v0.16.2
+    hooks:
+      - id: cython-lint
+        files: ^package/
+      - id: double-quote-cython-strings
+        files: ^package/
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.7
+    hooks:
+      - id: ruff
+        args: [ --fix, --exit-zero ]
+        name: "ruff: fixing"
+        files: ^package/
+      - id: ruff-format
+        name: "ruff: formatting"
+        files: ^package/
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        files: ^package/
+      - id: end-of-file-fixer
+        files: ^package/
+      - id: check-added-large-files

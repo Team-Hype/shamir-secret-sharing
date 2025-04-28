@@ -1,0 +1,3 @@
+include LICENSE README.md
+include shamir_ss/*.pyx
+include shamir_ss/*.c

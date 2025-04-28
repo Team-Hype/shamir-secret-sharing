@@ -2,24 +2,40 @@
 name = "shamir-ss"
 version = "0.1.0"
 description = "Shamir's Secret Sharing implementation using Cython"
+readme = "README.md"
+requires-python = ">=3.12"
+keywords = ["cryptography", "shamir", "secret sharing"]
+license = {text = "MIT"}
 authors = [
     {name = "peplxx",email = "91543105+peplxx@users.noreply.github.com"}
 ]
-readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "cryptography (>=44.0.2,<45.0.0)",
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Security :: Cryptography"
 ]
 
 [tool.poetry]
+name = "shamir-ss"
+version = "0.1.0"
+description = "Shamir's Secret Sharing implementation using Cython"
+authors = [
+    "peplxx <91543105+peplxx@users.noreply.github.com>",
+]
+license = "MIT"
 packages = [{include = "shamir_ss"}]
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
-cython = "^3.0.12"
 setuptools = "^79.0.0"
-
+pre-commit = "^4.0.1"
+nox = "^2025.2.9"
+twine = "^6.1.0"
 
 [build-system]
 requires = ["setuptools", "cython", "wheel"]
