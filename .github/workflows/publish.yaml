@@ -28,7 +28,7 @@ jobs:
 
     - name: Run tests
       working-directory: package
-      run: make test
+      run: make nox
       
     - name: Clean previous builds
       working-directory: package
