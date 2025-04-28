@@ -22,16 +22,20 @@ jobs:
         curl -sSL https://install.python-poetry.org | python3 -
 
     - name: Install dependencies
+      working-directory: package
       run: |
         poetry install 
 
     - name: Run tests
+      working-directory: package
       run: make test
-
+      
     - name: Clean previous builds
+      working-directory: package
       run: make clean
-
+      
     - name: Build package
+      working-directory: package
       run: make package-build
 
     - name: Publish to PyPI
