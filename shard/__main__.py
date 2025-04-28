@@ -1,37 +1,47 @@
 import argparse
-import sys
+import asyncio
 
-import shard.slave as slave
 import shard.master as master
+import shard.slave as slave
 
-def start_master(port: str):
-    print("Starting in MASTER mode...")
-    master.start(port)
 
-def start_slave(master_host, port):
-    print("Starting in SLAVE mode...")
-    slave.start(master_host, port=port)
+class MainStarter:
+    """
+     - Parse args
+     - Start appropriate mode
+    """
+    def start(self):
+        mode, port, master_host = self.__parse_args()
+
+        if mode == 'master':
+            asyncio.run(self.__start_master(port))
+        elif mode == 'slave':
+            self.__start_slave(master_host, port)
+        else:
+            print('unknown mode')
+
+    def __parse_args(self):
+        parser = argparse.ArgumentParser(description="SHamir Algorithm Reliable Distributed")
+
+        parser.add_argument('--mode', choices=['master', 'slave'], required=True, help="Run mode: master or slave")
+        parser.add_argument('--port', required=True, help="Grpc Server Port")
+        parser.add_argument('--master-host', help="Master host address (required in slave mode)")
+
+        args = parser.parse_args()
+
+        return args.mode, args.port, args.master_host
+
+    async def __start_master(self, grpc_port: int):
+        print("Starting in MASTER mode...")
+        # TODO request http_port from user
+        await master.start(5050, grpc_port)
+
+    def __start_slave(self, master_host, port):
+        print("Starting in SLAVE mode...")
+        slave.start(master_host, port=port)
+
 
 if __name__ == '__main__':
     print("-- Shard --")
-    parser = argparse.ArgumentParser(description="SHamir Algorithm Reliable Distributed")
 
-    parser.add_argument('--mode', choices=['master', 'slave'], required=True, help="Run mode: master or slave")
-    parser.add_argument('--port', required=True, help="Grpc Server Port")
-    parser.add_argument('--master-host', help="Master host address (required in slave mode)")
-
-    args = parser.parse_args()
-
-    if args.mode == 'master':
-        if args.master_host:
-            print("Error: --master-host should not be used in master mode.")
-            sys.exit(1)
-        start_master(args.port)
-    elif args.mode == 'slave':
-        if not args.master_host:
-            print("Error: --master-host is required in slave mode.")
-            sys.exit(1)
-        start_slave(args.master_host, args.port)
-
-
-
+    MainStarter().start()
