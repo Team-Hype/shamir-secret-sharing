@@ -3,9 +3,9 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.hash import bcrypt
 import uvicorn
-from models import User
-from logic import get_current_user, get_db, create_access_token
-from db import Session
+from shard.master.fastapi.models import User
+from shard.master.fastapi.logic import get_current_user, get_db, create_access_token
+from shard.master.db import Session
 
 app = FastAPI()
 
@@ -45,5 +45,15 @@ def public_route():
     return {"msg": "This is a public route."}
 
 
+@app.post("/store-key")
+def store_key(current_user: User = Depends(get_current_user)):
+    return {"msg" : "hello world epta!"}
+
+
+@app.post("/get-key")
+def store_key(current_user: User = Depends(get_current_user)):
+    return {"msg" : "hello world epta!"}
+
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, log_level="info")
+    uvicorn.run(":app", host="0.0.0.0", port=8000, log_level="info")
