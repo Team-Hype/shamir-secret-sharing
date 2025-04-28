@@ -1,6 +1,6 @@
 [project]
 name = "shamir-ss"
-version = "0.1.0"
+version = "0.1.1"
 description = "Shamir's Secret Sharing implementation using Cython"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -21,7 +21,7 @@ classifiers = [
 
 [tool.poetry]
 name = "shamir-ss"
-version = "0.1.0"
+version = "0.1.1"
 description = "Shamir's Secret Sharing implementation using Cython"
 authors = [
     "peplxx <91543105+peplxx@users.noreply.github.com>",
