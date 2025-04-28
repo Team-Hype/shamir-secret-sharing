@@ -38,3 +38,8 @@ clean:
 	@find . -name '*.pyc' -exec rm -f {} +
 	@find . -name '*.pyo' -exec rm -f {} +
 	@find . -name '*~' -exec rm -f {} +
+
+.PHONY: tag
+tag:
+	git tag v$(shell poetry version -s)
+	git push origin --tags
