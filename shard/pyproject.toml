@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "shard"
+version = "0.1.0"
+description = ""
+authors = ["Dmitrii Prosvirkin <prosvirkin.dmitry@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+grpcio = "^1.71.0"
+grpcio-tools = "^1.71.0"
+mypy-protobuf = "^3.6.0"
+sqlalchemy = "^2.0.40"
+shamir-ss = "^0.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
