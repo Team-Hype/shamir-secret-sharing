@@ -1,14 +1,35 @@
-test:
-	poetry run python -m pytest
 
+.PHONY: pre-commit-build
 package-build:
-	poetry run python setup.py build_ext --inplace
+	poetry build
+	poetry run twine check dist/*
 
+.PHONY: pre-commit-upload
+package-upload: package-build
+	poetry run twine upload dist/*
+
+.PHONY: pre-commit-install
 pre-commit-install:
 	poetry install && poetry run pre-commit install
 
+.PHONY: pre-commit-run
 pre-commit-run:
 	poetry run pre-commit run --all-files
 
+.PHONY: pre-commit-clean
 pre-commit-clean:
 	poetry run pre-commit clean
+
+
+TARGET_VERSION=3.13
+.PHONY: nox
+nox:
+	poetry run python3 -m nox -s lint test-$(TARGET_VERSION)
+
+.PHONY: test
+test:
+	poetry run python3 -m nox -s test
+
+.PHONY: clean
+clean:
+	rm -rf build/ dist/ shamir_ss.egg-info/ __pycache__/
