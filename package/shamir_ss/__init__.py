@@ -1,4 +1,4 @@
-from .shamir import generate_shares, reconstruct_secret
+from .shamir import generate_text_shares, reconstruct_text_secret
 
 
-__all__ = ["generate_shares", "reconstruct_secret"]
+__all__ = ["generate_text_shares", "reconstruct_text_secret"]

@@ -1,8 +1,71 @@
 import secrets
 import functools
 
-cdef object _PRIME = (2 ** 127 - 1)
-cdef object _RINT = functools.partial(secrets.SystemRandom().randint, 0)
+_PRIME = 2**127-1
+_RINT = functools.partial(secrets.SystemRandom().randint, 0)
+
+
+def text_to_chunks(text: str, prime: int) -> list:
+    """Convert text to padded integer chunks"""
+    original_bytes = text.encode("utf-8")
+    total_length = len(original_bytes).to_bytes(8, "big")
+    combined_bytes = total_length + original_bytes
+
+    max_chunk_size = (prime.bit_length() - 1) // 8
+    padding_needed = (-len(combined_bytes)) % max_chunk_size
+    combined_bytes += b"\x00" * padding_needed  # Trailing padding
+
+    chunks = [combined_bytes[i:i+max_chunk_size]
+              for i in range(0, len(combined_bytes), max_chunk_size)]
+
+    chunk_ints = []
+    for chunk in chunks:
+        chunk_int = int.from_bytes(chunk, "big")
+        if chunk_int >= prime:
+            raise ValueError(f"Prime too small - need >2^{8*max_chunk_size}")
+        chunk_ints.append(chunk_int)
+    return chunk_ints
+
+
+def chunks_to_text(chunk_ints: list, prime: int) -> str:
+    """Convert padded chunks back to text"""
+    max_chunk_size = (prime.bit_length() - 1) // 8
+    chunk_bytes = [int.to_bytes(c, max_chunk_size, "big") for c in chunk_ints]
+    padded_combined = b"".join(chunk_bytes)
+
+    length_bytes = padded_combined[:8]
+    total_length = int.from_bytes(length_bytes, "big")
+    combined_bytes = padded_combined[:8+total_length]
+
+    return combined_bytes[8:8+total_length].decode("utf-8")
+
+
+def generate_text_shares(text: str, minimum: int, shares: int, prime: int = _PRIME):
+    """Generate shares for long text with proper padding"""
+    chunks = text_to_chunks(text, prime)
+
+    all_shares = []
+    for chunk in chunks:
+        chunk_shares = generate_shares(chunk, minimum, shares, prime)
+        all_shares.append(chunk_shares)
+
+    return [(i+1, [s[1] for s in [share[i] for share in all_shares]])
+            for i in range(shares)]
+
+
+def reconstruct_text_secret(shares: list, prime: int = _PRIME) -> str:
+    """Reconstruct text from shares with padding removal"""
+    if not shares:
+        raise ValueError("No shares provided")
+
+    num_chunks = len(shares[0][1])
+    reconstructed = []
+
+    for chunk_idx in range(num_chunks):
+        chunk_shares = [(s[0], s[1][chunk_idx]) for s in shares]
+        reconstructed.append(reconstruct_secret(chunk_shares, prime))
+
+    return chunks_to_text(reconstructed, prime)
 
 
 cdef object _eval_at(list poly, object x, object prime):
@@ -76,11 +139,10 @@ def generate_shares(object secret, int minimum, int shares, object prime=_PRIME)
     if minimum > shares:
         raise ValueError("Pool secret would be irrecoverable.")
 
-    cdef list poly = [secret]
-    cdef int i
+    cdef list poly = [int(secret)]
     cdef object rint = _RINT
 
-    for i in range(minimum - 1):
+    for _ in range(minimum - 1):
         poly.append(rint(prime - 1))
 
     cdef list points = [
