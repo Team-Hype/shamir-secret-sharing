@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Secret Reconstructed - Shamir's Secret Sharing{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2 class="card-title h4"><i class="bi bi-unlock-fill me-2"></i>Secret Successfully Reconstructed</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success mb-4">
+                    <p class="mb-0">
+                        <i class="bi bi-check-circle-fill me-2"></i> 
+                        The original secret has been successfully reconstructed from the shared files.
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="h5" style="color: var(--success-color);"><i class="bi bi-key-fill me-2"></i>Reconstructed Secret:</h3>
+                    <div class="border rounded p-3" style="background-color: var(--success-light); border-color: var(--success-color);">
+                        <pre class="mb-0" style="white-space: pre-wrap; word-break: break-word; background-color: transparent;"><code>{{ secret }}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning" style="background-color: var(--primary-very-light); border-color: var(--primary-light); color: var(--primary-dark);">
+                    <h5 class="alert-heading h6"><i class="bi bi-exclamation-triangle-fill me-2"></i>Security Notice</h5>
+                    <p class="mb-0">For security, this secret will only be displayed once. Please copy it now if you need to keep it. Once you navigate away from this page, you'll need to reconstruct it again from the shares.</p>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button id="copy-button" class="btn btn-success">
+                        <i class="bi bi-clipboard me-1"></i> Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 mt-4">
+            <a href="{{ url_for('combine') }}" class="btn btn-outline-success"><i class="bi bi-arrow-repeat me-1"></i>Reconstruct Another Secret</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const copyButton = document.getElementById('copy-button');
+        const secretText = document.querySelector('pre code').textContent;
+        
+        copyButton.addEventListener('click', function() {
+            navigator.clipboard.writeText(secretText).then(function() {
+                // Change button text temporarily
+                const originalText = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="bi bi-check"></i> Copied!';
+                copyButton.classList.remove('btn-success');
+                copyButton.classList.add('btn-primary');
+                
+                // Revert after 2 seconds
+                setTimeout(function() {
+                    copyButton.innerHTML = originalText;
+                    copyButton.classList.remove('btn-primary');
+                    copyButton.classList.add('btn-success');
+                }, 2000);
+            }, function() {
+                alert('Failed to copy text to clipboard');
+            });
+        });
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Generated Shares - Shamir's Secret Sharing{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2 class="card-title h4">Shares Successfully Generated</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <p class="mb-0">
+                        <i class="bi bi-check-circle-fill"></i> 
+                        Your secret has been split into <strong>{{ shares|length }}</strong> shares with a threshold of <strong>{{ threshold }}</strong>.
+                    </p>
+                </div>
+                
+                <div class="d-grid gap-2 mb-4">
+                    <a href="{{ url_for('download_all_shares') }}" class="btn btn-primary">
+                        <i class="bi bi-file-earmark-zip"></i> Download All Shares as ZIP
+                    </a>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <h5 class="alert-heading">Important Instructions</h5>
+                    <p>To reconstruct the secret, you will need <strong>at least {{ threshold }}</strong> of these shares.</p>
+                    <hr>
+                    <p class="mb-0">For security, distribute these shares to different trusted parties. Once you leave this page, you will not be able to access these shares again.</p>
+                </div>
+                
+                <h3 class="h5 mb-3">Individual Shares</h3>
+                
+                <div class="accordion" id="accordionShares">
+                    {% for share in shares %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ share.id }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ share.id }}" aria-expanded="false" aria-controls="collapse{{ share.id }}">
+                                Share #{{ share.id }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ share.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ share.id }}" data-bs-parent="#accordionShares">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <pre class="border rounded p-3 bg-light"><code>{{ share|tojson(indent=2) }}</code></pre>
+                                </div>
+                                <div class="text-end">
+                                    <a href="{{ url_for('download_share', index=loop.index0) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-download"></i> Download Share
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 mt-4">
+            <a href="{{ url_for('split') }}" class="btn btn-outline-primary">Generate Different Shares</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

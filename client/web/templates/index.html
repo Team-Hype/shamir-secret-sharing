@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Shamir's Secret Sharing - Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 style="color: var(--primary-color);">Shamir's Secret Sharing</h1>
+            <p class="lead">A cryptographic algorithm to securely share and reconstruct secrets</p>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header" style="background-color: var(--primary-very-light); color: var(--primary-dark);">
+                <h2 class="card-title h4">What is Shamir's Secret Sharing?</h2>
+            </div>
+            <div class="card-body">
+                <p>Shamir's Secret Sharing is a cryptographic method that allows you to divide a secret into multiple parts (shares), where:</p>
+                <ul>
+                    <li>Each individual share reveals <strong style="color: var(--primary-color);">nothing</strong> about the original secret</li>
+                    <li>Only by combining a minimum number of shares (threshold) can the secret be reconstructed</li>
+                    <li>Even with one share less than the threshold, the secret remains completely protected</li>
+                </ul>
+                <p>This provides both security and fault tolerance for sensitive information.</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title h5 mb-0"><i class="bi bi-scissors me-2"></i>Split a Secret</h3>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <p>Divide your secret into multiple shares with a customizable threshold for reconstruction.</p>
+                        <p>Each share will be available for download individually or as a complete set.</p>
+                        <a href="{{ url_for('split') }}" class="btn btn-primary mt-auto">Split Secret</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="card-title h5 mb-0"><i class="bi bi-puzzle me-2"></i>Combine Shares</h3>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <p>Upload your share files to reconstruct the original secret.</p>
+                        <p>You'll need at least the threshold number of shares that was specified during the splitting process.</p>
+                        <a href="{{ url_for('combine') }}" class="btn btn-success mt-auto">Combine Shares</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header" style="background-color: var(--primary-very-light); color: var(--primary-dark);">
+                <h3 class="card-title h4"><i class="bi bi-shield-lock me-2"></i>Security Considerations</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h4 class="alert-heading h5"><i class="bi bi-exclamation-triangle-fill me-2"></i>Important Privacy Notice</h4>
+                    <p>While this web application processes your data, please note:</p>
+                    <ul>
+                        <li>All processing occurs in your browser and on your local machine</li>
+                        <li>Your secret is never transmitted to any external server</li>
+                        <li>For highly sensitive information, consider using the CLI version in an air-gapped environment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}About - Shamir's Secret Sharing{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title h4">About Shamir's Secret Sharing</h2>
+            </div>
+            <div class="card-body">
+                <h3 class="h5">What is Shamir's Secret Sharing?</h3>
+                <p>
+                    Shamir's Secret Sharing is a cryptographic algorithm created by Adi Shamir. It is a form of secret sharing, 
+                    where a secret is divided into parts, giving each participant its own unique part.
+                </p>
+                <p>
+                    To reconstruct the original secret, a minimum number of parts (threshold) is required. In the threshold scheme, 
+                    this number is less than the total number of parts. Otherwise, even with knowledge of <em>all but one part</em>, 
+                    the secret cannot be reconstructed.
+                </p>
+
+                <h3 class="h5 mt-4">How it Works</h3>
+                <p>
+                    Shamir's Secret Sharing is based on polynomial interpolation. If we have a polynomial of degree <em>t-1</em> 
+                    (where <em>t</em> is the threshold), then we need exactly <em>t</em> points to define it completely.
+                </p>
+                <p>
+                    Consider a secret split into <em>n</em> shares where any <em>k</em> of them can be used to reconstruct the secret:
+                </p>
+                <ol>
+                    <li>Choose a prime number <em>p</em> larger than the secret</li>
+                    <li>Create a polynomial <em>f(x) = a₀ + a₁x + a₂x² + ... + aₖ₋₁xᵏ⁻¹</em> where <em>a₀</em> is the secret and all other coefficients are random</li>
+                    <li>Generate <em>n</em> points on the curve, typically <em>f(1), f(2), ..., f(n)</em></li>
+                    <li>Each share is a point <em>(x, f(x))</em></li>
+                    <li>With any <em>k</em> points, Lagrange interpolation can be used to find <em>f(0) = a₀</em> (the secret)</li>
+                </ol>
+
+                <h3 class="h5 mt-4">Applications</h3>
+                <p>
+                    Shamir's Secret Sharing has numerous applications, including:
+                </p>
+                <ul>
+                    <li><strong>Key Management:</strong> Protecting cryptographic keys</li>
+                    <li><strong>Multiparty Computation:</strong> Allowing multiple parties to compute a function without revealing inputs</li>
+                    <li><strong>Distributed System Security:</strong> Preventing single points of failure</li>
+                    <li><strong>Access Control:</strong> Requiring multiple authorities to access sensitive information</li>
+                </ul>
+
+                <h3 class="h5 mt-4">References</h3>
+                <ul>
+                    <li><a href="https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf" target="_blank">Shamir, Adi. "How to share a secret." Communications of the ACM 22.11 (1979): 612-613.</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing" target="_blank">Wikipedia: Shamir's Secret Sharing</a></li>
+                    <li><a href="https://iancolechen.io/shamir/" target="_blank">Interactive Shamir Web Demo</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h3 class="card-title h5">About This Implementation</h3>
+            </div>
+            <div class="card-body">
+                <p>
+                    This web application is built using:
+                </p>
+                <ul>
+                    <li><strong>Python:</strong> Core implementation with optimized Cython components</li>
+                    <li><strong>Flask:</strong> Web framework</li>
+                    <li><strong>Bootstrap:</strong> UI components</li>
+                </ul>
+                <p>
+                    All operations are performed locally on your device. Your secrets are never transmitted to any server.
+                </p>
+                <p>
+                    For high-security applications, consider using the companion <a href="{{ url_for('index') }}">CLI application</a> 
+                    in an isolated environment.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

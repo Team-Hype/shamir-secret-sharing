@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Split a Secret - Shamir's Secret Sharing{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title h4"><i class="bi bi-scissors me-2"></i>Split a Secret</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('split') }}">
+                    <div class="mb-3">
+                        <label for="secret" class="form-label" style="color: var(--primary-color);"><i class="bi bi-eye-slash me-1"></i>Secret Text</label>
+                        <textarea class="form-control" id="secret" name="secret" rows="4" required placeholder="Enter the secret you want to split"></textarea>
+                        <div class="form-text">This is the sensitive information you want to protect.</div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="threshold" class="form-label" style="color: var(--primary-color);"><i class="bi bi-lock me-1"></i>Threshold</label>
+                            <input type="number" class="form-control" id="threshold" name="threshold" min="2" max="100" value="3" required>
+                            <div class="form-text">Minimum number of shares needed to reconstruct the secret.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="shares" class="form-label" style="color: var(--primary-color);"><i class="bi bi-share me-1"></i>Total Shares</label>
+                            <input type="number" class="form-control" id="shares" name="shares" min="2" max="100" value="5" required>
+                            <div class="form-text">Total number of shares to generate.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info" style="background-color: var(--primary-very-light); border-color: var(--primary-light); color: var(--primary-dark);">
+                        <i class="bi bi-info-circle me-2"></i> 
+                        <b>Example:</b> If threshold is 3 and total shares is 5, you will create 5 shares, any 3 of which can reconstruct the secret.
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-magic me-1"></i>Generate Shares</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header" style="background-color: var(--primary-very-light); color: var(--primary-dark);">
+                <h3 class="card-title h5"><i class="bi bi-shield-lock me-2"></i>Security Tips</h3>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Choose a threshold that balances security with practicality</li>
+                    <li>Distribute shares to different trusted individuals or secure locations</li>
+                    <li>Consider the implications if any shares are lost</li>
+                    <li>Never store all shares in the same location</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const thresholdInput = document.getElementById('threshold');
+        const sharesInput = document.getElementById('shares');
+        
+        // Ensure threshold never exceeds shares
+        function validateInputs() {
+            const threshold = parseInt(thresholdInput.value);
+            const shares = parseInt(sharesInput.value);
+            
+            if (threshold > shares) {
+                thresholdInput.value = shares;
+            }
+            
+            if (threshold < 2) {
+                thresholdInput.value = 2;
+            }
+            
+            if (shares < 2) {
+                sharesInput.value = 2;
+            }
+        }
+        
+        thresholdInput.addEventListener('change', validateInputs);
+        sharesInput.addEventListener('change', validateInputs);
+    });
+</script>
+{% endblock %} 

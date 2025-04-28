@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Combine Shares - Shamir's Secret Sharing{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2 class="card-title h4"><i class="bi bi-puzzle me-2"></i>Combine Shares</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('combine') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="share_files" class="form-label" style="color: var(--success-color);"><i class="bi bi-file-earmark-text me-1"></i>Share Files</label>
+                        <input class="form-control" type="file" id="share_files" name="share_files" multiple accept=".json" required>
+                        <div class="form-text">Select the share files (.json) that you want to combine. You need at least the threshold number of shares.</div>
+                    </div>
+                    
+                    <div class="alert alert-info" style="background-color: var(--success-light); border-color: var(--success-color); color: var(--success-dark);">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <div>
+                                <h5 class="alert-heading h6 mb-1">Important</h5>
+                                <p class="mb-0">Make sure you upload at least the threshold number of shares that was specified when the secret was split. For example, if the threshold was 3, you need at least 3 valid share files.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success"><i class="bi bi-unlock me-1"></i>Reconstruct Secret</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header" style="background-color: var(--success-light); color: var(--success-dark);">
+                <h3 class="card-title h5"><i class="bi bi-card-checklist me-2"></i>Instructions</h3>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Collect at least the threshold number of share files from their secure storage locations</li>
+                    <li>Select all these files using the file selector above</li>
+                    <li>Click "Reconstruct Secret" to recover the original secret</li>
+                </ol>
+                <div class="alert alert-warning" style="background-color: var(--primary-very-light); border-color: var(--primary-light); color: var(--primary-dark);">
+                    <p class="mb-0"><i class="bi bi-shield-check me-1"></i><strong>Note:</strong> Your share files are processed locally and never leave your device.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('share_files');
+        const submitButton = document.querySelector('button[type="submit"]');
+        
+        fileInput.addEventListener('change', function() {
+            // Enable submit button only if files are selected
+            submitButton.disabled = this.files.length === 0;
+        });
+        
+        // Initial state
+        submitButton.disabled = fileInput.files.length === 0;
+    });
+</script>
+{% endblock %} 

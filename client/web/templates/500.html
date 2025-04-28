@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - Shamir's Secret Sharing{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 mx-auto text-center">
+        <div class="mt-5">
+            <h1 class="display-1">500</h1>
+            <h2>Server Error</h2>
+            <p class="lead">Something went wrong on our end. Please try again later.</p>
+            <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">
+                <i class="bi bi-house-door"></i> Go to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 
