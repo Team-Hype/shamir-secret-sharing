@@ -1,12 +1,12 @@
 
 .PHONY: package-build
 package-build:
-	poetry build
+	poetry run python3 setup.py sdist
 	poetry run twine check dist/*
 
 .PHONY: package-upload
 package-upload: package-build
-	poetry run twine upload dist/*
+	poetry run twine upload dist/*.tar.gz
 
 .PHONY: pre-commit-install
 pre-commit-install:
