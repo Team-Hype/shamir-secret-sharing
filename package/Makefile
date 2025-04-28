@@ -32,4 +32,9 @@ test:
 
 .PHONY: clean
 clean:
-	rm -rf build/ dist/ shamir_ss.egg-info/ __pycache__/
+	@rm -rf build/ dist/ .mypy_cache/ .pytest_cache/
+	@rm -rf shamir_ss.egg-info/ __pycache__/ .nox/
+	@rm -f shamir_ss/*.so shamir_ss/*.c
+	@find . -name '*.pyc' -exec rm -f {} +
+	@find . -name '*.pyo' -exec rm -f {} +
+	@find . -name '*~' -exec rm -f {} +
