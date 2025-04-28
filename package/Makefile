@@ -1,7 +1,7 @@
 
 .PHONY: package-build
 package-build:
-	poetry run python3 setup.py sdist
+	poetry build -f sdist
 	poetry run twine check dist/*
 
 .PHONY: package-upload
