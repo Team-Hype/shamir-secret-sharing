@@ -1,7 +1,7 @@
 from db import SessionLocal, Session
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
-from fastapi import Depends, status
+from fastapi import Depends, status, HTTPException
 from constants import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from jose import jwt, JWTError
 
