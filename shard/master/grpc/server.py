@@ -1,7 +1,7 @@
 import grpc
 
-import shard.generated.master_pb2 as cf
-import shard.generated.master_pb2_grpc as cf_grpc
+import shard.resources.generated.master_pb2 as cf
+import shard.resources.generated.master_pb2_grpc as cf_grpc
 
 
 class MasterServer(cf_grpc.MasterServicer):

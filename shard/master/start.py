@@ -5,6 +5,7 @@ import grpc
 
 import shard.generated.master_pb2_grpc as cf_grpc
 from shard.master.server import MasterServer
+import shard.resources.generated.master_pb2_grpc as cf_grpc
 
 
 async def start_grpc_server(port: int, stop_event: asyncio.Event):

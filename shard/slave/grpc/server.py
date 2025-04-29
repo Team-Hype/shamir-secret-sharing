@@ -4,6 +4,8 @@ import grpc
 
 import shard.generated.slave_pb2 as cf
 import shard.generated.slave_pb2_grpc as cf_grpc
+import shard.resources.generated.slave_pb2 as cf
+import shard.resources.generated.slave_pb2_grpc as cf_grpc
 
 
 class SlaveServer(cf_grpc.SlaveServicer):
