@@ -20,7 +20,7 @@ class MainStarter:
         else:
             print('unknown mode')
 
-    def __parse_args(self):
+    def __parse_args(self) -> (str, int, str):
         parser = argparse.ArgumentParser(description="SHamir Algorithm Reliable Distributed")
 
         parser.add_argument('--mode', choices=['master', 'slave'], required=True, help="Run mode: master or slave")
@@ -29,14 +29,14 @@ class MainStarter:
 
         args = parser.parse_args()
 
-        return args.mode, args.port, args.master_host
+        return args.mode, int(args.port), args.master_host
 
     async def __start_master(self, grpc_port: int):
         print("Starting in MASTER mode...")
         # TODO request http_port from user
         await master.start(5050, grpc_port)
 
-    def __start_slave(self, master_host, port):
+    def __start_slave(self, master_host: str, port: int):
         print("Starting in SLAVE mode...")
         slave.start(master_host, port)
 
