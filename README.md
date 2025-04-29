@@ -1,3 +1,4 @@
+![Tests](https://github.com/Team-Hype/shamir-secret-sharing/actions/workflows/package-test.yaml/badge.svg)
 ![PYPI](https://img.shields.io/pypi/v/shamir_ss.svg)
 ![versions](https://img.shields.io/pypi/pyversions/shamir_ss.svg)
 # Shamir Secret Sharing Project
@@ -10,7 +11,7 @@
 
 ### Automation & CI/CD
  - [x] Python package deployment
- - [ ] CI with Tests
+ - [x] CI with Tests
  - [ ] Docker compose for Shard
  - [x] Pre-commit linters & formatters
 
