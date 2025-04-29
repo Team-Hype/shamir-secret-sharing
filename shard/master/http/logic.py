@@ -2,9 +2,9 @@ from shard.master.db import Session
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from fastapi import Depends, status, HTTPException
-from shard.master.fastapi.constants import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
+from shard.master.http.constants import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from jose import jwt, JWTError
-from shard.master.fastapi.models import User
+from shard.master.http.models import User
 from shard.master.db import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")

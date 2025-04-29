@@ -3,8 +3,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.hash import bcrypt
 import uvicorn
-from shard.master.fastapi.models import User
-from shard.master.fastapi.logic import get_current_user, get_db, create_access_token
+from shard.master.http.models import User
+from shard.master.http.logic import get_current_user, get_db, create_access_token
 from shard.master.db import Session
 
 app = FastAPI()
