@@ -47,8 +47,8 @@ done
 
 for GENERATED_FILE in $OUT_DIR/*.py
 do
-    sed -i 's/^import \(.*\)_pb2$/from shard.generated import \1_pb2/' $GENERATED_FILE
-    sed -i 's/^import \(.*\)_pb2_grpc$/from shard.generated import \1_pb2_grpc/' $GENERATED_FILE
+    sed -i 's/^import \(.*\)_pb2$/from shard.resources.generated import \1_pb2/' $GENERATED_FILE
+    sed -i 's/^import \(.*\)_pb2_grpc$/from shard.resources.generated import \1_pb2_grpc/' $GENERATED_FILE
 done
 
 colored_echo "✅  Compilation is finished. All files are in '$OUT_DIR'." green
