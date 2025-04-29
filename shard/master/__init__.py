@@ -1,3 +1,3 @@
-from shard.master.server import start
+from shard.master.start import start
 
 __all__ = ("start")
