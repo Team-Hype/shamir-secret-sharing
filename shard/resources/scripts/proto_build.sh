@@ -5,10 +5,10 @@ if [ "$(basename $(pwd))" != "shard" ]; then
     exit 1
 fi
 
-source scripts/utils.sh
+source resources/scripts/utils.sh
 
-PROTO_DIR="schema_registry"
-OUT_DIR="generated"
+PROTO_DIR="resources/schema_registry"
+OUT_DIR="resources/generated"
 
 if ! python3 -c "import grpc_tools" &> /dev/null || ! python3 -c "import mypy_protobuf" &> /dev/null
 then
