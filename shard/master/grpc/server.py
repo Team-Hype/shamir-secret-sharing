@@ -21,7 +21,7 @@ class MasterServer(cf_grpc.MasterServicer):
 
         from shard.master.db.managers import SlaveManager
         from shard.master.db import get_db
-        slave_manager = SlaveManager(session=get_db())
+        slave_manager = SlaveManager(session=next(get_db()))
         slave_manager.add(ip)
 
-        return cf.ConnectionResponse()
+        return cf.ConnectionResponse(approve=True)

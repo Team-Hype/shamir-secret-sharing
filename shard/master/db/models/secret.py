@@ -6,7 +6,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from shard.master.db.models import Base
+from shard.master.db.models.base import Base
+from shard.master.db.models.secret2slave import secrets_to_slaves
 
 
 class Secret(Base):
