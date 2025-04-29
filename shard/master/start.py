@@ -1,6 +1,6 @@
 import asyncio
 import signal
-
+import uvicorn
 import grpc
 
 import shard.resources.generated.master_pb2_grpc as cf_grpc
@@ -24,18 +24,12 @@ async def start_grpc_server(port: int, stop_event: asyncio.Event):
 
 
 async def start_fastapi_server(port: int, stop_event: asyncio.Event):
-    # Your FastAPI server
-    class server:
-        should_exit = False
-        @staticmethod
-        async def serve():
-            while not server.should_exit:
-                await asyncio.sleep(1)
+    from shard.master.http import app
 
-    async def serve():
-        await server.serve()
+    config = uvicorn.Config(app=app, host="0.0.0.0", port=port, loop="asyncio", lifespan="off")
+    server = uvicorn.Server(config)
 
-    server_task = asyncio.create_task(serve())
+    server_task = asyncio.create_task(server.serve())
 
     await stop_event.wait()
     print("Shutting down FastAPI server...")

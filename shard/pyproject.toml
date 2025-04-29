@@ -12,6 +12,11 @@ grpcio-tools = "^1.71.0"
 mypy-protobuf = "^3.6.0"
 sqlalchemy = "^2.0.40"
 shamir-ss = "^0.1.1"
+fastapi = "^0.115.12"
+uvicorn = "^0.34.2"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-jose = "^3.4.0"
+python-multipart = "^0.0.20"
 
 
 [build-system]
