@@ -1,3 +1,3 @@
-from shard.slave.grpc.server import start
+from shard.slave.start import start
 
 __all__ = ("start")

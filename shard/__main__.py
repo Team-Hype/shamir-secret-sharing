@@ -38,7 +38,7 @@ class MainStarter:
 
     def __start_slave(self, master_host, port):
         print("Starting in SLAVE mode...")
-        slave.start(master_host, port=port)
+        slave.start(master_host, port)
 
 
 if __name__ == '__main__':
