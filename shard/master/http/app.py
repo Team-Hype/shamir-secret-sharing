@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.hash import bcrypt
 import uvicorn
-from shard.master.http.models import User
+from shard.master.db.models import User
 from shard.master.http.logic import get_current_user, get_db, create_access_token
 from shard.master.db import Session
 
@@ -53,7 +53,3 @@ def store_key(current_user: User = Depends(get_current_user)):
 @app.post("/get-key")
 def store_key(current_user: User = Depends(get_current_user)):
     return {"msg" : "hello world epta!"}
-
-
-if __name__ == "__main__":
-    uvicorn.run(":app", host="0.0.0.0", port=8000, log_level="info")
