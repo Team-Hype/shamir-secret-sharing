@@ -1,11 +1,14 @@
 # main.py
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.hash import bcrypt
 import uvicorn
 from shard.master.db.models import User
 from shard.master.http.logic import get_current_user, get_db, create_access_token
 from shard.master.db import Session
+import shard.master.grpc.communication as communication
+from shard.master.http.models import KeyValueSecret, KeySecret
+
 
 app = FastAPI()
 
@@ -46,10 +49,23 @@ def public_route():
 
 
 @app.post("/store-key")
-def store_key(current_user: User = Depends(get_current_user)):
-    return {"msg" : "hello world epta!"}
+async def store_key(
+    secret : KeyValueSecret,
+    current_user: User = Depends(get_current_user)
+):
+    if await communication.store_key(current_user.id, secret.key, secret.value):
+        return status.HTTP_201_CREATED
+
+    raise HTTPException(status_code=400, detail="what happens?")
 
 
 @app.post("/get-key")
-def store_key(current_user: User = Depends(get_current_user)):
-    return {"msg" : "hello world epta!"}
+async def get_key( 
+    secret : KeySecret,
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        res = await communication.get_key(current_user.id, secret.key)
+        return {"secret" : res}
+    except:
+        raise HTTPException(status_code=404, detail="key not found")
