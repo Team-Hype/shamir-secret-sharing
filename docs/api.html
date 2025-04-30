@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shamir Secret Sharing - API Documentation</title>
+  <link rel="stylesheet" href="../style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+  <style>
+    .endpoint {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .method {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .get { background: #e6f7ff; color: #1890ff; }
+    .post { background: #f6ffed; color: #52c41a; }
+    .put { background: #fff7e6; color: #fa8c16; }
+    .delete { background: #fff1f0; color: #f5222d; }
+    .path {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+    }
+    .model {
+      margin-top: 20px;
+      border-left: 3px solid #1890ff;
+      padding-left: 15px;
+    }
+    .required {
+      color: #f5222d;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Shamir Secret Sharing API Documentation</h1>
+    
+    <section class="overview">
+      <h2>API Overview</h2>
+      <p>The Shamir Secret Sharing API provides both cryptographic functions and distributed storage capabilities through RESTful endpoints and gRPC services.</p>
+      
+      <div class="api-version">
+        <strong>Version:</strong> 1.0.0<br>
+      </div>
+    </section>
+
+    <section class="authentication">
+      <h2>Authentication</h2>
+      <p>All endpoints except <code>/</code> and <code>/register</code> require JWT authentication.</p>
+      
+      <div class="endpoint">
+        <div class="method post">POST</div>
+        <span class="path">/register</span>
+        <p>Register a new user account.</p>
+        
+        <h4>Request Body</h4>
+        <pre><code class="language-json">{
+  "username": "string",
+  "password": "string"
+}</code></pre>
+        
+        <h4>Response</h4>
+        <pre><code class="language-json">{
+  "msg": "User registered successfully"
+}</code></pre>
+      </div>
+
+      <div class="endpoint">
+        <div class="method post">POST</div>
+        <span class="path">/login</span>
+        <p>Authenticate and receive JWT token.</p>
+        
+        <h4>Request Body</h4>
+        <pre><code class="language-json">{
+  "username": "string",
+  "password": "string"
+}</code></pre>
+        
+        <h4>Response</h4>
+        <pre><code class="language-json">{
+  "access_token": "string",
+  "token_type": "bearer"
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="core-api">
+      <h2>Core API Endpoints</h2>
+      
+      <div class="endpoint">
+        <div class="method get">GET</div>
+        <span class="path">/protected</span>
+        <p>Test authenticated route.</p>
+        
+        <h4>Headers</h4>
+        <pre><code>Authorization: Bearer {token}</code></pre>
+        
+        <h4>Response</h4>
+        <pre><code class="language-json">{
+  "msg": "Hello, {username}. This is a protected route."
+}</code></pre>
+      </div>
+
+      <div class="endpoint">
+        <div class="method post">POST</div>
+        <span class="path">/store-key</span>
+        <p>Store a secret key-value pair using Shamir's algorithm.</p>
+        
+        <h4>Headers</h4>
+        <pre><code>Authorization: Bearer {token}
+Content-Type: application/json</code></pre>
+        
+        <h4>Request Body</h4>
+        <div class="model">
+          <h4>KeyValueSecret</h4>
+          <pre><code class="language-typescript">{
+  key: string;    // Unique identifier for the secret
+  value: string;  // The secret value to store
+}</code></pre>
+        </div>
+        
+        <h4>Response</h4>
+        <p>HTTP 201 Created on success</p>
+      </div>
+
+      <div class="endpoint">
+        <div class="method post">POST</div>
+        <span class="path">/get-key</span>
+        <p>Retrieve a previously stored secret.</p>
+        
+        <h4>Headers</h4>
+        <pre><code>Authorization: Bearer {token}
+Content-Type: application/json</code></pre>
+        
+        <h4>Request Body</h4>
+        <div class="model">
+          <h4>KeySecret</h4>
+          <pre><code class="language-typescript">{
+  key: string;  // The identifier of the secret to retrieve
+}</code></pre>
+        </div>
+        
+        <h4>Response</h4>
+        <pre><code class="language-json">{
+  "secret": "string"  // The reconstructed secret value
+}</code></pre>
+      </div>
+    </section>
+    
+    <section class="grpc-api">
+      <h2>gRPC API Documentation</h2>
+      
+      <div class="grpc-service">
+        <h3>Master Service</h3>
+        <p>Central coordination service for managing slave nodes and secret distribution.</p>
+        
+        <div class="grpc-method">
+          <strong>Connect</strong> - Handshake for slave registration
+          <div class="message-definition">
+            <pre><code class="language-protobuf">rpc Connect(ConnectionRequest) returns (ConnectionResponse);
+  
+  message ConnectionRequest {}  // Empty request
+  
+  message ConnectionResponse {
+    bool approve = 1;  // Connection approval status
+  }</code></pre>
+          </div>
+        </div>
+        
+        <h4>Python Implementation</h4>
+        <pre><code class="language-python">class MasterServer(cf_grpc.MasterServicer):
+      def Connect(self, request, context):
+          peer = context.peer()  # Get client IP
+          # Register slave in database
+          slave_manager.add(peer.split(':')[1])
+          return cf.ConnectionResponse(approve=True)</code></pre>
+      </div>
+  
+      <div class="grpc-service">
+        <h3>Slave Service</h3>
+        <p>Service for storing and retrieving secret parts on slave nodes.</p>
+        
+        <div class="grpc-method">
+          <strong>PutSecretPart</strong> - Store a secret part
+          <div class="message-definition">
+            <pre><code class="language-protobuf">rpc PutSecretPart(SecretPart) returns (Key);
+  
+  message SecretPart {
+    Key key = 1;    // Secret identifier
+    bytes part = 2; // Encrypted secret part
+  }</code></pre>
+          </div>
+        </div>
+        
+        <div class="grpc-method">
+          <strong>GetSecretPart</strong> - Retrieve a secret part
+          <div class="message-definition">
+            <pre><code class="language-protobuf">rpc GetSecretPart(Key) returns (SecretPart);
+  
+  message Key {
+    uint64 key = 1;  // Secret identifier
+  }</code></pre>
+          </div>
+        </div>
+        
+        <h4>Connection Flow</h4>
+        <pre><code class="language-python">def start_slave(master_host, port):
+      # Connect to master first
+      if connect_to_master(master_host):
+          # Start gRPC server
+          server = grpc.server(futures.ThreadPoolExecutor())
+          cf_grpc.add_SlaveServicer_to_server(SlaveServer(), server)
+          server.add_insecure_port(f"0.0.0.0:{port}")
+          server.start()</code></pre>
+      </div>
+      
+      <div class="grpc-service">
+        <h3>Proto Compilation</h3>
+        <p>Compile .proto files using the provided script:</p>
+        <pre><code class="language-bash">./compile_proto.sh
+  # Generates:
+  # - resources/generated/*_pb2.py
+  # - resources/generated/*_pb2_grpc.py
+  # - resources/generated/*_pb2.pyi (mypy types)</code></pre>
+      </div>
+    </section>
+
+    <section class="error-codes">
+      <h2>Error Codes</h2>
+      <table>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad request (invalid parameters)</td>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized (invalid/missing token)</td>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Secret not found</td>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal server error</td>
+        </tr>
+      </table>
+    </section>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

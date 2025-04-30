@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shamir Secret Sharing - CLI Reference Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      font-weight: 700;
+      color: #2d3748;
+      margin-top: 1.5em;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: #f6f8fa;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    pre {
+      background: #f6f8fa;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    .command {
+      background: #81a2db;
+      color: rgb(0, 0, 0);
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .note {
+      background: #e3f2fd;
+      padding: 12px;
+      border-left: 4px solid #2196f3;
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Shamir Secret Sharing CLI Reference Guide</h1>
+  
+  <p>The Shamir Secret Sharing CLI provides a secure way to split secrets into shares and reconstruct them when needed.</p>
+
+  <h2>Installation</h2>
+  <pre><code class="language-bash">pip install shamir_ss</code></pre>
+
+  <h2>Basic Commands</h2>
+  
+  <div class="command">
+    <code>shamir_ss split</code> - Split a secret into shares
+  </div>
+  
+  <div class="command">
+    <code>shamir_ss combine</code> - Reconstruct a secret from shares
+  </div>
+  
+  <div class="command">
+    <code>shamir_ss help</code> - Show detailed usage examples
+  </div>
+
+  <h2>Split Command</h2>
+  
+  <h3>Usage</h3>
+  <pre><code class="language-bash">shamir_ss split [OPTIONS]</code></pre>
+  
+  <h3>Options</h3>
+  <table>
+    <tr>
+      <th>Option</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><code>-s, --secret TEXT</code></td>
+      <td>The secret text to split (prompted if not provided)</td>
+    </tr>
+    <tr>
+      <td><code>-t, --threshold INTEGER</code></td>
+      <td>Minimum shares required to reconstruct (required)</td>
+    </tr>
+    <tr>
+      <td><code>-n, --shares INTEGER</code></td>
+      <td>Total number of shares to generate (required)</td>
+    </tr>
+    <tr>
+      <td><code>-o, --output PATH</code></td>
+      <td>Directory to save shares (prints to console if not provided)</td>
+    </tr>
+    <tr>
+      <td><code>--verify/--no-verify</code></td>
+      <td>Verify shares by reconstructing (default: true)</td>
+    </tr>
+  </table>
+  
+  <h3>Examples</h3>
+  <pre><code class="language-bash"># Split with interactive secret input
+shamir_ss split -t 3 -n 5
+
+# Split with secret from command line
+shamir_ss split -s "My secret" -t 3 -n 5 -o shares
+
+# Split without verification
+shamir_ss split -t 3 -n 5 --no-verify</code></pre>
+
+  <div class="note">
+    <strong>Note:</strong> When not providing <code>--secret</code>, the CLI will prompt for input with hidden typing.
+  </div>
+
+  <h2>Combine Command</h2>
+  
+  <h3>Usage</h3>
+  <pre><code class="language-bash">shamir_ss combine [SHARE_FILES]... [OPTIONS]</code></pre>
+  
+  <h3>Options</h3>
+  <table>
+    <tr>
+      <th>Option</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><code>-i, --input-dir PATH</code></td>
+      <td>Directory containing share files</td>
+    </tr>
+    <tr>
+      <td><code>-o, --output FILE</code></td>
+      <td>File to save reconstructed secret</td>
+    </tr>
+    <tr>
+      <td><code>-t, --text</code></td>
+      <td>Enter shares as text input</td>
+    </tr>
+    <tr>
+      <td><code>-h, --hash TEXT</code></td>
+      <td>Original secret hash for verification</td>
+    </tr>
+  </table>
+  
+  <h3>Examples</h3>
+  <pre><code class="language-bash"># Combine from files
+shamir_ss combine share1.txt share2.txt share3.txt
+
+# Combine from directory
+shamir_ss combine -i shares
+
+# Combine with hash verification
+shamir_ss combine -i shares -h "a591a6d40bf420..."
+
+# Interactive text input
+shamir_ss combine --text</code></pre>
+
+  <div class="note">
+    <strong>Security Tip:</strong> When reconstructing, providing the original hash (<code>-h</code>) allows verification that the reconstructed secret matches the original.
+  </div>
+
+  <h2>Share Formats</h2>
+  
+  <p>Shares can be stored in multiple formats:</p>
+  
+  <h3>Single File Format</h3>
+  <pre>Hash: a591a6d40bf420...
+1:gAAAAABmQ8VKZQ9...
+2:gAAAAABmQ8VKZQ9...
+3:gAAAAABmQ8VKZQ9...
+4:gAAAAABmQ8VKZQ9...
+5:gAAAAABmQ8VKZQ9...</pre>
+  
+  <h3>Individual Share Files</h3>
+  <p>Each share can be stored in a separate file containing just the share data.</p>
+  
+  <h2>Security Considerations</h2>
+  
+  <ul>
+    <li>Secrets are never stored on disk (only shares)</li>
+    <li>Interactive input hides typing</li>
+    <li>SHA-256 hash verification ensures secret integrity</li>
+    <li>Uses cryptographically secure random number generation</li>
+  </ul>
+  
+  <h2>Troubleshooting</h2>
+  
+  <h3>Common Errors</h3>
+  <table>
+    <tr>
+      <th>Error</th>
+      <th>Solution</th>
+    </tr>
+    <tr>
+      <td>"Threshold must be ≤ shares"</td>
+      <td>Ensure threshold is less than or equal to total shares</td>
+    </tr>
+    <tr>
+      <td>"No valid shares found"</td>
+      <td>Check share files for corruption</td>
+    </tr>
+    <tr>
+      <td>"Hash verification failed"</td>
+      <td>Shares may be corrupted or insufficient</td>
+    </tr>
+  </table>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>
