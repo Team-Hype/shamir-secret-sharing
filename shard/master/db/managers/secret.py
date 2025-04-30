@@ -15,6 +15,9 @@ class SecretManager:
     def get(self, secret_id: int) -> Secret | None:
         return self.session.query(Secret).filter_by(id=secret_id).first()
 
+    def get_by_key(self, key: str) -> Secret | None:
+        return self.session.query(Secret).filter_by(key=key).first()
+
     def assign_slave(self, secret_id: int, slave_id: int):
         secret = self.get(secret_id)
         slave = self.session.query(Slave).filter_by(id=slave_id).first()

@@ -8,7 +8,8 @@ import shamir_ss as sss
 import shard.resources.generated.slave_pb2 as cf
 import shard.resources.generated.slave_pb2_grpc as cf_grpc
 from shard.master.db import get_db
-from shard.master.db.managers import SlaveManager, SecretManager
+from shard.master.db.managers import SecretManager
+from shard.master.db.managers import SlaveManager
 
 
 # TODO rename to store_secret
@@ -21,7 +22,7 @@ async def store_key(user_id: str, key: str, value: str, k: int = 2, n: int = 3) 
     5. Store mapping Slave-Part in DB
     """
     # TODO split code
-    shares: list[tuple] = sss.generate_shares(value, 2, 3)
+    shares: list[tuple] = sss.generate_text_shares(value, 2, 3)
     encoded_shares = [encode_share(share) for share in shares]
 
     slave_manager = SlaveManager(next(get_db()))
@@ -62,9 +63,43 @@ async def store_key(user_id: str, key: str, value: str, k: int = 2, n: int = 3) 
 
     return True
 
+
 # TODO rename to get_secret
 async def get_key(user_id: str, key: str) -> str:
-    pass
+    """
+    1. Get secret from db
+    2. Get Slaves of this secret
+    3. Request 'required_parts' number of Slaves for parts
+    4. Reconstruct and return secret
+    """
+    session = next(get_db())
+    secret_manager = SecretManager(session)
+
+    secret = secret_manager.get_by_key(key)
+    if not secret:
+        raise ValueError("Secret not found")
+
+    assigned_slaves = secret.slaves
+    if len(assigned_slaves) < secret.required_parts:
+        raise ValueError("Not enough shares to recover the secret")
+
+    shares = []
+    for slave in assigned_slaves:
+        if len(shares) == secret.required_parts:
+            break
+        try:
+            with grpc.insecure_channel(slave.host) as channel:
+                stub = cf_grpc.SlaveStub(channel)
+                response = stub.GetSecretPart(cf.Key(key=key))
+                shares.append(decode_share(response.part))
+        except Exception as e:
+            print(f"Failed to get share from {slave.host}: {e}")
+
+    if len(shares) < secret.required_parts:
+        raise ValueError("Failed to retrieve enough shares")
+
+    secret = sss.reconstruct_text_secret(shares)
+    return secret
 
 
 def take_hash(value: str) -> str:
