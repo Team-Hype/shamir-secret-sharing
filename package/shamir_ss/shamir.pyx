@@ -5,41 +5,6 @@ _PRIME = 2**127-1
 _RINT = functools.partial(secrets.SystemRandom().randint, 0)
 
 
-def text_to_chunks(text: str, prime: int) -> list:
-    """Convert text to padded integer chunks"""
-    original_bytes = text.encode("utf-8")
-    total_length = len(original_bytes).to_bytes(8, "big")
-    combined_bytes = total_length + original_bytes
-
-    max_chunk_size = (prime.bit_length() - 1) // 8
-    padding_needed = (-len(combined_bytes)) % max_chunk_size
-    combined_bytes += b"\x00" * padding_needed  # Trailing padding
-
-    chunks = [combined_bytes[i:i+max_chunk_size]
-              for i in range(0, len(combined_bytes), max_chunk_size)]
-
-    chunk_ints = []
-    for chunk in chunks:
-        chunk_int = int.from_bytes(chunk, "big")
-        if chunk_int >= prime:
-            raise ValueError(f"Prime too small - need >2^{8*max_chunk_size}")
-        chunk_ints.append(chunk_int)
-    return chunk_ints
-
-
-def chunks_to_text(chunk_ints: list, prime: int) -> str:
-    """Convert padded chunks back to text"""
-    max_chunk_size = (prime.bit_length() - 1) // 8
-    chunk_bytes = [int.to_bytes(c, max_chunk_size, "big") for c in chunk_ints]
-    padded_combined = b"".join(chunk_bytes)
-
-    length_bytes = padded_combined[:8]
-    total_length = int.from_bytes(length_bytes, "big")
-    combined_bytes = padded_combined[:8+total_length]
-
-    return combined_bytes[8:8+total_length].decode("utf-8")
-
-
 def generate_text_shares(text: str, minimum: int, shares: int, prime: int = _PRIME):
     """Generate shares for long text with proper padding"""
     chunks = text_to_chunks(text, prime)
@@ -66,6 +31,81 @@ def reconstruct_text_secret(shares: list, prime: int = _PRIME) -> str:
         reconstructed.append(reconstruct_secret(chunk_shares, prime))
 
     return chunks_to_text(reconstructed, prime)
+
+
+def bytes_to_chunks(data: bytes, prime: int) -> list:
+    """Convert bytes to padded integer chunks"""
+    # Calculate chunk size based on prime's bit length
+    max_chunk_size = (prime.bit_length() + 7) // 8
+    max_chunk_value = 2 ** (8 * max_chunk_size) - 1
+
+    # Verify prime can actually contain the chunks
+    if prime > max_chunk_value:
+        raise ValueError(f"Prime {prime} too large for {max_chunk_size}-byte chunks")
+
+    # Add length header and padding
+    length_header = len(data).to_bytes(8, "big")
+    combined = length_header + data
+
+    # PKCS#7 padding
+    padding_needed = (-len(combined)) % max_chunk_size
+    combined += bytes([padding_needed] * padding_needed)
+
+    chunk_ints = []
+    for i in range(0, len(combined), max_chunk_size):
+        chunk = combined[i:i+max_chunk_size]
+        chunk_int = int.from_bytes(chunk, "big")
+
+        # Final safety check
+        if chunk_int >= prime:
+            required_bits = chunk_int.bit_length()
+            raise ValueError(
+                f"Chunk {i//max_chunk_size} requires {required_bits}-bit prime "
+                f"(current: {prime.bit_length()} bits)"
+            )
+        chunk_ints.append(chunk_int)
+
+    return chunk_ints
+
+
+def chunks_to_bytes(chunk_ints: list, prime: int) -> bytes:
+    """Convert chunks back to bytes with padding validation"""
+    # Calculate chunk size based on prime's bit length
+    max_chunk_size = (prime.bit_length() + 7) // 8
+    _max_chunk_value = 2 ** (8 * max_chunk_size) - 1
+
+    # Convert all chunks to bytes first
+    try:
+        chunk_bytes = [c.to_bytes(max_chunk_size, "big") for c in chunk_ints]
+    except OverflowError as e:
+        raise ValueError("Invalid chunk value detected") from e
+
+    combined = b"".join(chunk_bytes)
+
+    # Extract length and validate padding
+    length = int.from_bytes(combined[:8], "big")
+    payload = combined[8:8+length]
+    padding = combined[8+length:]
+
+    # Validate PKCS#7 padding
+    if padding:
+        pad_value = padding[-1]
+        if pad_value == 0 or pad_value > len(padding):
+            raise ValueError("Invalid padding")
+        if padding != bytes([pad_value] * len(padding)):
+            raise ValueError("Padding corruption detected")
+
+    return payload
+
+
+def text_to_chunks(text: str, prime: int, encoding: str = "utf-8") -> list:
+    """Helper for text inputs with explicit encoding"""
+    return bytes_to_chunks(text.encode(encoding, "ignore"), prime)
+
+
+def chunks_to_text(chunk_ints: list, prime: int, encoding: str = "utf-8") -> str:
+    """Helper for text outputs with explicit encoding"""
+    return chunks_to_bytes(chunk_ints, prime).decode(encoding, "ignore")
 
 
 cdef object _eval_at(list poly, object x, object prime):
