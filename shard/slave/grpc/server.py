@@ -13,7 +13,7 @@ class SlaveServer(cf_grpc.SlaveServicer):
         db = next(get_db())
         try:
             manager = SecretManager(db)
-            manager.save(key=str(request.key.key), part=request.part.decode())
+            manager.save(key=str(request.key.key), part=request.part)
             return cf.Key(key=request.key.key)
         finally:
             db.close()
@@ -29,7 +29,7 @@ class SlaveServer(cf_grpc.SlaveServicer):
             if not secret:
                 context.abort(grpc.StatusCode.NOT_FOUND, "Part not found")
 
-            return cf.SecretPart(key=request, part=secret.part.encode())
+            return cf.SecretPart(key=request, part=secret.part)
         finally:
             db.close()
 
