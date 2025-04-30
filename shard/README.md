@@ -14,7 +14,7 @@
    ```
    python -m shard --mode {master|slave} --port {port}
    ```
-4. FastApi will be runned on 0.0.0.0:5050 address.
+4. FastApi will be run on 0.0.0.0:5050 address.
 
 
 ## Functional:
