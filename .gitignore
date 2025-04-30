@@ -2,3 +2,6 @@
 __pycache__/
 .idea/
 *.db
+venv/
+shares/
+recovered_secret.txt
