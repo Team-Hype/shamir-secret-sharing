@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Secret Split Successfully</h2>
+    <p>Your secret has been split into {{ shares|length }} shares. You need at least {{ threshold }} of these shares to reconstruct the secret.</p>
+    
+    {% if verification_result is not none %}
+        <div class="verification-result {% if verification_result %}verification-success{% else %}verification-failure{% endif %}">
+            {% if verification_result %}
+                <i class="fas fa-check-circle"></i> Verification Successful! The secret can be reconstructed with {{ threshold }} shares.
+            {% else %}
+                <i class="fas fa-exclamation-triangle"></i> Verification Failed! The reconstructed secret doesn't match the original.
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    <div class="hash-display">
+        <strong>Secret Hash:</strong> {{ secret_hash }}
+        <p class="small">Keep this hash to verify your secret when reconstructing.</p>
+    </div>
+    
+    <div class="result-section">
+        <h3>Your Shares:</h3>
+        {% for share in shares %}
+            <div class="share-box">{{ share }}</div>
+        {% endfor %}
+    </div>
+    
+    <div class="buttons">
+        <a href="{{ url_for('download_shares') }}" class="btn">
+            <i class="fas fa-download"></i> Download All Shares
+        </a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary" id="go-back-btn">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
+        <a href="{{ url_for('combine_page') }}" class="btn" id="go-combine-btn">
+            <i class="fas fa-puzzle-piece"></i> Go to Combine Shares
+        </a>
+    </div>
+    
+    <div class="info-box">
+        <h3><i class="fas fa-exclamation-circle"></i> Important Information</h3>
+        <ul>
+            <li>Store these shares in separate, secure locations.</li>
+            <li>You'll need at least {{ threshold }} shares to reconstruct your secret.</li>
+            <li>Keep the hash to verify the reconstructed secret later.</li>
+            <li>Anyone with {{ threshold }} or more shares can reconstruct your secret.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 

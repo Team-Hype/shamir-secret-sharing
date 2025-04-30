@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tabs">
+    <div class="tab {% if active_tab != 'combine' %}active{% endif %}" onclick="openTab(event, 'split-tab')">
+        <i class="fas fa-cut"></i> Split Secret
+    </div>
+    <div class="tab {% if active_tab == 'combine' %}active{% endif %}" onclick="openTab(event, 'combine-tab')">
+        <i class="fas fa-puzzle-piece"></i> Combine Shares
+    </div>
+</div>
+
+<div id="split-tab" class="tab-content {% if active_tab != 'combine' %}active{% endif %}">
+    <div class="card">
+        <h2>Split a Secret into Shares</h2>
+        <p>Enter your secret text and specify how many shares to create and how many are needed to reconstruct it.</p>
+        
+        <form action="{{ url_for('split') }}" method="post">
+            <div>
+                <label for="secret">Secret Text:</label>
+                <input type="text" id="secret" name="secret" required placeholder="Enter your secret text">
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label for="threshold">Threshold (minimum shares needed):</label>
+                    <input type="number" id="threshold" name="threshold" min="2" value="2" required>
+                </div>
+                
+                <div>
+                    <label for="shares">Total Shares to Generate:</label>
+                    <input type="number" id="shares" name="shares" min="2" value="3" required>
+                </div>
+            </div>
+            
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="verify" checked>
+                    Verify shares by reconstructing secret
+                </label>
+            </div>
+            
+            <button type="submit">
+                <i class="fas fa-cut"></i> Split Secret
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="combine-tab" class="tab-content {% if active_tab == 'combine' %}active{% endif %}">
+    <div class="card">
+        <h2>Combine Shares to Reconstruct Secret</h2>
+        <p>Provide the shares to reconstruct your secret. You can paste them directly or upload a file.</p>
+        
+        <form action="{{ url_for('combine') }}" method="post" enctype="multipart/form-data">
+            <div>
+                <label for="shares_text">Paste Shares (one per line):</label>
+                <textarea id="shares_text" name="shares_text" rows="6" placeholder="Paste your shares here, one per line"></textarea>
+            </div>
+            
+            <div>
+                <label for="shares_file">OR Upload a File with Shares:</label>
+                <input type="file" id="shares_file" name="shares_file">
+            </div>
+            
+            <div>
+                <label for="hash">Original Secret Hash (optional, for verification):</label>
+                <input type="text" id="hash" name="hash" placeholder="Enter the hash of the original secret for verification">
+            </div>
+            
+            <button type="submit">
+                <i class="fas fa-puzzle-piece"></i> Combine Shares
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %} 

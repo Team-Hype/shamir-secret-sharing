@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Secret Reconstructed Successfully</h2>
+    
+    {% if hash_match is not none %}
+        <div class="verification-result {% if hash_match %}verification-success{% else %}verification-failure{% endif %}">
+            {% if hash_match %}
+                <i class="fas fa-check-circle"></i> Hash Verification Successful! The reconstructed secret matches the original.
+            {% else %}
+                <i class="fas fa-exclamation-triangle"></i> Hash Verification Failed! The reconstructed secret doesn't match the original.
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="verification-result" style="background-color: #fff8e1; color: #ff8f00;">
+            <i class="fas fa-info-circle"></i> No original hash was provided for verification.
+        </div>
+    {% endif %}
+    
+    <div class="result-section">
+        <h3>Your Reconstructed Secret:</h3>
+        <div class="secret-display">{{ secret }}</div>
+    </div>
+    
+    <div class="hash-display">
+        <strong>Reconstructed Secret Hash:</strong> {{ reconstructed_hash }}
+        {% if original_hash %}
+            <hr style="margin: 10px 0; border-top: 1px dashed #ccc;">
+            <strong>Original Secret Hash:</strong> {{ original_hash }}
+        {% endif %}
+    </div>
+    
+    <div class="buttons">
+        <a href="{{ url_for('index') }}" class="btn">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
+    </div>
+    
+    <div class="info-box">
+        <h3><i class="fas fa-exclamation-circle"></i> Security Note</h3>
+        <ul>
+            <li>Your secret has been reconstructed securely in your browser.</li>
+            <li>For security, make sure to close this window after you've copied your secret.</li>
+            <li>Consider clearing your browser history and cache after handling sensitive information.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 
