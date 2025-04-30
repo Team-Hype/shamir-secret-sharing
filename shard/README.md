@@ -1,5 +1,22 @@
 # Overview. Python Server
 
+
+## Setup
+
+1. Make sure you have poetry installed
+
+2. Install the requirements:
+   ```
+   poetry install
+   ```
+
+3. Run the module:
+   ```
+   python -m shard --mode {master|slave} --port {port}
+   ```
+4. FastApi will be runned on 0.0.0.0:5050 address.
+
+
 ## Functional:
 
 Two modes:
