@@ -60,12 +60,12 @@ async def store_key(
 
 
 @app.post("/get-key")
-def get_key( 
+async def get_key( 
     secret : KeySecret,
     current_user: User = Depends(get_current_user)
 ):
     try:
-        res = communication.get_key(current_user.id, secret.key)
+        res = await communication.get_key(current_user.id, secret.key)
         return {"secret" : res}
     except:
         raise HTTPException(status_code=404, detail="key not found")
