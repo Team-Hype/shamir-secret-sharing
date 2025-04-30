@@ -7,7 +7,7 @@
  - [x] ~~Shamir crypto package~~
  - [x] ~~Shamir CLI Application~~
  - [ ] Shard Distributed Secret Vault Implementation
- - [ ] WebUI Demonstration
+ - [x] ~~WebUI Demonstration~~
 
 ### Automation & CI/CD
  - [x] ~~Python package deployment~~
