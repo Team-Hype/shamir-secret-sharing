@@ -4,16 +4,29 @@
 # Shamir Secret Sharing Project
 ## Project Goals
 ### Core Components
- - [x] Shamir crypto package
- - [ ] Shamir CLI Application
+ - [x] ~~Shamir crypto package~~
+ - [x] ~~Shamir CLI Application~~
  - [ ] Shard Distributed Secret Vault Implementation
  - [ ] WebUI Demonstration
 
 ### Automation & CI/CD
- - [x] Python package deployment
- - [x] CI with Tests
+ - [x] ~~Python package deployment~~
+ - [x] ~~CI with Tests~~
  - [ ] Docker compose for Shard
- - [x] Pre-commit linters & formatters
+ - [x] ~~Pre-commit linters & formatters~~
+
+### Validation [checklist](requirements.md)
+ - [x] ~~Hash the input and reconstructed secrets to confirm integrity~~
+ - [x] ~~Attempt reconstruction with insufficient shares (should fail)~~
+ - [ ] Log generation and reconstruction steps for auditability
+
+## Project organization
+```
+.
+├── client  # Web client 
+├── package # Crypto package
+└── shard   # Distributed secret vault
+```
 
 ## Shard Architecture Scheme
 ![Shard Architecture Scheme](/images/shard-scheme.png)
