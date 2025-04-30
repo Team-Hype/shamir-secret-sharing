@@ -56,7 +56,7 @@ async def store_key(
     if await communication.store_key(current_user.id, secret.key, secret.value):
         return status.HTTP_201_CREATED
 
-    raise HTTPException(status_code=400, detail="what happenes???")
+    raise HTTPException(status_code=400, detail="what happens?")
 
 
 @app.post("/get-key")
