@@ -1,6 +1,6 @@
 [project]
 name = "shamir-ss"
-version = "0.1.8"
+version = "0.1.9"
 description = "Shamir's Secret Sharing implementation using Cython"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -26,7 +26,7 @@ classifiers = [
 
 [tool.poetry]
 name = "shamir-ss"
-version = "0.1.8"
+version = "0.1.9"
 description = "Shamir's Secret Sharing implementation using Cython"
 authors = [
     "peplxx <91543105+peplxx@users.noreply.github.com>",
@@ -42,6 +42,9 @@ pre-commit = "^4.0.1"
 nox = "^2025.2.9"
 twine = "^6.1.0"
 
+
+[tool.poetry.dependencies]
+click = "^8.1.8"
 [build-system]
 requires = ["setuptools", "cython", "wheel"]
 build-backend = "setuptools.build_meta"
