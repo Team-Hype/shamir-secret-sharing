@@ -1,16 +1,17 @@
 import base64
+import hashlib
+import pickle
 
 import grpc
 import shamir_ss as sss
-import pickle
-
-from shard.master.db import get_db
-from shard.master.db.managers import SlaveManager
 
 import shard.resources.generated.slave_pb2 as cf
 import shard.resources.generated.slave_pb2_grpc as cf_grpc
+from shard.master.db import get_db
+from shard.master.db.managers import SlaveManager, SecretManager
 
 
+# TODO rename to store_secret
 async def store_key(user_id: str, key: str, value: str, k: int = 2, n: int = 3) -> bool:
     """
     1. Apply shamir algorithm
@@ -19,6 +20,7 @@ async def store_key(user_id: str, key: str, value: str, k: int = 2, n: int = 3) 
     4. In for loop try to store part in slave
     5. Store mapping Slave-Part in DB
     """
+    # TODO split code
     shares: list[tuple] = sss.generate_shares(value, 2, 3)
     encoded_shares = [encode_share(share) for share in shares]
 
@@ -50,16 +52,23 @@ async def store_key(user_id: str, key: str, value: str, k: int = 2, n: int = 3) 
                 success_slaves += [slave]
 
     if len(success_slaves) != n:
+        # TODO remove parts from slave
         return False
 
-
-    # TODO store mapp in db
+    secret_manager = SecretManager(next(get_db()))
+    secret = secret_manager.add(key, take_hash(value), k)
+    for slave in success_slaves:
+        secret_manager.assign_slave(secret.id, slave.id)
 
     return True
 
-
+# TODO rename to get_secret
 async def get_key(user_id: str, key: str) -> str:
     pass
+
+
+def take_hash(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
 def encode_share(share: tuple) -> str:
