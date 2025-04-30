@@ -49,11 +49,11 @@ def public_route():
 
 
 @app.post("/store-key")
-def store_key(
+async def store_key(
     secret : KeyValueSecret,
     current_user: User = Depends(get_current_user)
 ):
-    if communication.store_key(current_user.id, secret.key, secret.value):
+    if await communication.store_key(current_user.id, secret.key, secret.value):
         return status.HTTP_201_CREATED
 
     raise HTTPException(status_code=400, detail="what happenes???")
