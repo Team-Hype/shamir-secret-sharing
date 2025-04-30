@@ -8,7 +8,7 @@
 | CLI Application | ✅ Implemented | [CLI Source](package/shamir_ss/__main__.py) | [README](package/README.md) |
 | Shard Distributed Secret Vault | ✅ Implemented | [Shard Source](shard/) | [README](shard/README.md) |
 | WebUI Demonstration | ✅ Deployed | [Web UI](https://aquaf1na.fun) | [README](client/README.md) |
-| Online docs | 🚧 In process | ~ | ~ |
+| Online docs | ✅ Deployed | [Pages](https://team-hype.github.io/shamir-secret-sharing/) | ~ |
 
 ## Project Goals
 ### Core Components
