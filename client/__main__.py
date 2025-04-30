@@ -7,11 +7,9 @@ import hashlib
 import sys
 import tempfile
 
-# Add the package directory to the path so we can import shamir_ss
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import the Shamir Secret Sharing functions
-from package.shamir_ss.shamir import generate_text_shares, reconstruct_text_secret
+from shamir_ss import generate_text_shares, reconstruct_text_secret
 
 # Create Flask app
 app = Flask(__name__, static_folder='static')
