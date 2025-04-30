@@ -1,11 +1,13 @@
 [project]
 name = "shamir-ss"
-version = "0.1.9"
+version = "0.2.0"
 description = "Shamir's Secret Sharing implementation using Cython"
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = ["cryptography", "shamir", "secret sharing"]
-license = {text = "MIT"}
+license-files = [
+    "LICENSE*",
+]
 authors = [
     {name = "peplxx",email = "91543105+peplxx@users.noreply.github.com"}
 ]
@@ -26,7 +28,7 @@ classifiers = [
 
 [tool.poetry]
 name = "shamir-ss"
-version = "0.1.9"
+version = "0.2.0"
 description = "Shamir's Secret Sharing implementation using Cython"
 authors = [
     "peplxx <91543105+peplxx@users.noreply.github.com>",
