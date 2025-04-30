@@ -1,41 +1,40 @@
 name: Shamir Package Tests
-
+permissions:
+  contents: read
 on:
   pull_request:
     branches: [main]
 
-permissions:
-  contents: read
-
 jobs:
   test:
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-dev
 
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-            
-      - name: Install dependencies
+
+      - name: Install project dependencies
+        working-directory: package
+        run: poetry install --no-interaction --no-root
+
+      - name: Run Nox tests
         working-directory: package
         run: |
-            poetry install
-        
-      - name: Clean previous builds
-        working-directory: package
-        run: make clean
-            
-      - name: Build package
-        working-directory: package
-        run: make package-build
-
-
-      - name: Run tests
-        working-directory: package
-        run: make nox
+          poetry run nox -s test --python ${{ matrix.python-version }}
