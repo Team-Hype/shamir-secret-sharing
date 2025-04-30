@@ -2,11 +2,19 @@
 ![PYPI](https://img.shields.io/pypi/v/shamir_ss.svg)
 ![versions](https://img.shields.io/pypi/pyversions/shamir_ss.svg)
 # Shamir Secret Sharing Project
+| Deliverable | Status | Deployment/Implementation | Documentation |
+|-------------|--------|---------------------------|---------------|
+| Shamir crypto package (`shamir_ss`) | ✅ Published | [PyPI Package](https://pypi.org/project/shamir_ss/) | [README](package/README.md) |
+| CLI Application | ✅ Implemented | [CLI Source](package/shamir_ss/__main__.py) | [README](package/README.md) |
+| Shard Distributed Secret Vault | ✅ Implemented | [Shard Source](shard/) | [README](shard/README.md) |
+| WebUI Demonstration | ✅ Deployed | [Web UI](https://aquaf1na.fun) | [README](client/README.md) |
+| Online docs | 🚧 In process | ~ | ~ |
+
 ## Project Goals
 ### Core Components
  - [x] ~~Shamir crypto package~~
  - [x] ~~Shamir CLI Application~~
- - [ ] Shard Distributed Secret Vault Implementation
+ - [x] ~~Shard Distributed Secret Vault Implementation~~
  - [x] ~~WebUI Demonstration~~
 
 ### Automation & CI/CD
