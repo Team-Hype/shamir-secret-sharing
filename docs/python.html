@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shamir Secret Sharing - Python Examples</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <h1>Python API Examples</h1>
+      <p class="subtitle">Core usage examples for shamir_ss package</p>
+    </div>
+  </header>
+
+  <section class="examples">
+    <div class="container">
+      <div class="example-card">
+        <h2>1. Basic Secret Sharing</h2>
+        <pre><code class="language-python">from shamir_ss import generate_text_shares, reconstruct_text_secret
+
+def main():
+    secret = "My top secret"
+    
+    # Split into 5 shares (threshold=3)
+    shares = generate_text_shares(secret, 3, 5)
+    
+    # Reconstruct with 3 shares
+    reconstructed = reconstruct_text_secret(shares[:3])
+    print(reconstructed)
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <div class="output">
+          <h3>Output:</h3>
+          <pre>My top secret</pre>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <h2>2. Custom Prime Field</h2>
+        <pre><code class="language-python">from shamir_ss import generate_text_shares, reconstruct_text_secret
+
+def main():
+    secret = "My top secret"
+    # secp256k1 prime (Bitcoin's curve)
+    new_prime = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 - 1
+    
+    shares = generate_text_shares(secret, 3, 5, prime=new_prime)
+    reconstructed = reconstruct_text_secret(shares[:3], prime=new_prime)
+    print(reconstructed)
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <div class="output">
+          <h3>Output:</h3>
+          <pre>Using prime (bit length: 256, chunk size: 32 bytes)
+Split text into 1 chunks.
+Generating 5 shares with a threshold of 3...
+Processing chunk 1/1...
+Successfully generated all shares.
+Reconstructing from 3 shares.
+Prime bit length: 256, chunk size: 32 bytes
+Reconstructing 1 chunks...
+Chunk 1/1...
+All chunks reconstructed. Decoding text...
+My top secret</pre>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <h2>3. Verbose Mode</h2>
+        <pre><code class="language-python">from shamir_ss import generate_text_shares, reconstruct_text_secret
+
+def main():
+    secret = "My top secret"
+    
+    # With debug output
+    shares = generate_text_shares(secret, 3, 5, verbose=True)
+    reconstructed = reconstruct_text_secret(shares[:3], verbose=True)
+    print(reconstructed)
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <div class="output">
+          <h3>Output:</h3>
+          <pre>Using prime (bit length: 127, chunk size: 16 bytes)
+Split text into 2 chunks.
+Generating 5 shares with a threshold of 3...
+Processing chunk 1/2...
+Processing chunk 2/2...
+Successfully generated all shares.
+Reconstructing from 3 shares.
+Prime bit length: 127, chunk size: 16 bytes
+Reconstructing 2 chunks...
+Chunk 1/2...
+Chunk 2/2...
+All chunks reconstructed. Decoding text...
+My top secret</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Shamir Secret Sharing | MIT License</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

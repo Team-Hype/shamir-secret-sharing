@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shamir Secret Sharing (SSS) | Secure Cryptographic Secret Sharing</title>
+  <meta name="description" content="Open-source implementation of Shamir's Secret Sharing for Python, CLI, and Web.">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+</head>
+<body>
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container">
+      <h1>Shamir Secret Sharing (SSS)</h1>
+      <p class="subtitle">Cryptographically secure secret sharing for humans and machines</p>
+      <div class="badges">
+        <a href="https://pypi.org/project/shamir_ss/" class="badge">
+          <img src="https://img.shields.io/pypi/v/shamir_ss?color=blue&label=PyPI" alt="PyPI">
+        </a>
+        <a href="https://github.com/Team-Hype/shamir-secret-sharing/actions" class="badge">
+          <img src="https://github.com/Team-Hype/shamir-secret-sharing/actions/workflows/package-test.yaml/badge.svg" alt="CI Status">
+        </a>
+        <a href="https://opensource.org/licenses/MIT" class="badge">
+          <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Features Grid -->
+  <section class="features">
+    <div class="container">
+      <div class="feature-card">
+        <div class="icon">🔐</div>
+        <h3>High Security</h3>
+        <p>Uses Mersenne prime field (2¹²⁷-1) for cryptographic operations. Resistant to brute-force attacks.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📦</div>
+        <h3>Multi-Format Support</h3>
+        <p>Split text, files, or binary data. Automatic chunking for secrets >1MB.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🛠️</div>
+        <h3>Multiple Interfaces</h3>
+        <p>Python API, command-line tool, and web interface with Flask.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Video -->
+  <section class="demo">
+    <div class="container">
+      <h2>See It in Action</h2>
+      <div class="video-container">
+        <video controls poster="assets/shamir-preview.jpg">
+          <source src="assets/demo.mp4" type="video/mp4">
+          Your browser doesn't support HTML5 video.
+        </video>
+        <div class="caption">Demo: Splitting and reconstructing a secret via CLI and Web UI</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Code Tabs -->
+  <section class="code-examples">
+    <div class="container">
+      <h2>Shamir secret sharing interfaces</h2>
+      <div class="tabs">
+        <button class="tab-button active" data-tab="python">Python Package</button>
+        <button class="tab-button" data-tab="cli">Command Line</button>
+        <button class="tab-button" data-tab="web">Web Client</button>
+      </div>
+
+      <div id="python" class="tab-content active">
+        <pre><code class="language-python">from shamir_ss import generate_text_shares, reconstruct_text_secret
+
+def main():
+    secret = "My top secret"
+
+    shares = generate_text_shares(secret, 3, 5)
+
+    reconstructed = reconstruct_text_secret(shares[:3])
+    print(reconstructed)
+
+if __name__ == "__main__":
+    main()</code></pre>
+        <a href="python.html" class="docs-link">Python Examples →</a>
+      </div>
+
+      <div id="cli" class="tab-content">
+        <h3>Features</h3>
+        <ul>
+          <li>🔐 Interactive secret input with hidden typing</li>
+          <li>📁 Multiple input formats (files/directories/text)</li>
+          <li>🛡️ SHA-256 hash verification</li>
+          <li>🔄 Automatic share validation</li>
+        </ul>
+
+        <h3>Usage</h3>
+        <pre><code class="language-bash">python -m shamir_ss &lt;command&gt; &lt;...args&gt;</code></pre>
+
+        <h3>Command list</h3>
+        <pre><code class="language-bash">shamir_ss --help         # Show all commands
+shamir_ss split --help   # Split command help
+shamir_ss combine --help # Combine command help
+shamir_ss help           # Detailed usage examples</code></pre>
+
+        <h3>Examples</h3>
+        <pre><code class="language-bash">python -m shamir_ss split \
+  --secret "My top secret" \
+  -t 3 -n 5 \
+  --output shares</code></pre>
+        <blockquote>Split secret to 5 shares with treshold 3 and put output to shares dir</blockquote>
+
+        <pre><code class="language-bash">python -m shamir_ss combine \
+  -i shares</code></pre>
+        <blockquote>Reconstruct secret from shares dir w/o hash validation (will be prompted interactively)</blockquote>
+
+        <pre><code class="language-bash">shamir_ss combine --text</code></pre>
+        <blockquote>Reconstruct secret using interactive mode</blockquote>
+        <a href="cli.html" class="docs-link">CLI Reference Guide →</a>
+      </div>
+
+      <div id="web" class="tab-content">
+        <pre><code class="language-bash"># Launch web client
+python -m client
+
+# Access at http://localhost:5000</code></pre>
+        <a href="web-ui.html" class="docs-link">Web UI Documentation →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Diagram -->
+  <section class="architecture">
+    <div class="container">
+      <h2>How Shard Works</h2>
+      <img src="assets/images/shard-scheme.png" class="arch-image">
+      <div style="justify-content: center;"><a href="api.html" class="docs-link">Full API Documentation →</a></div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <p><strong>Polynomial Generation</strong>: Creates a (t-1)-degree polynomial with the secret as the constant term.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <p><strong>Share Distribution</strong>: Evaluates the polynomial at n distinct points to generate shares.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <p><strong>Reconstruction</strong>: Uses Lagrange interpolation on any t shares to recover the secret.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation -->
+  <section class="installation">
+    <div class="container">
+      <h2>Installation</h2>
+      <div class="methods">
+        <div class="method">
+          <h3>PyPI (Stable)</h3>
+          <pre><code class="language-bash">pip install shamir_ss</code></pre>
+        </div>
+        <div class="method">
+          <h3>GitHub (Latest)</h3>
+          <pre><code class="language-bash">pip install git+https://github.com/Team-Hype/shamir-secret-sharing</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="https://github.com/Team-Hype/shamir-secret-sharing">GitHub</a>
+        <a href="https://pypi.org/project/shamir_ss/">PyPI</a>
+        <a href="docs/api.html">Documentation</a>
+        <a href="https://github.com/Team-Hype/shamir-secret-sharing/issues">Report Bug</a>
+      </div>
+      <p class="copyright">© 2025 Shamir Secret Sharing Project | MIT License</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="script.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

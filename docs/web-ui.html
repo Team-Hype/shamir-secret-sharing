@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shamir Secret Sharing - Web UI Documentation</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+  <style>
+    /* Add this style to make steps vertical */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .step {
+      width: 100%;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <h1>Web Interface Documentation</h1>
+      <p class="subtitle">Browser-based interface for Shamir's Secret Sharing</p>
+    </div>
+  </header>
+
+  <section class="documentation">
+    <div class="container">
+      <h2>Web Client Overview</h2>
+      <p>The web interface provides a user-friendly way to split secrets into shares and reconstruct them using a browser. It's built with Flask and includes all the security features of the core library.</p>
+
+      <div class="feature-cards">
+        <div class="feature-card">
+          <h3>Split Secrets</h3>
+          <ul>
+            <li>Enter text secrets directly</li>
+            <li>Set threshold and total shares</li>
+            <li>Optional verification</li>
+            <li>Download all shares</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h3>Combine Shares</h3>
+          <ul>
+            <li>Paste shares or upload file</li>
+            <li>Hash verification</li>
+            <li>Secure reconstruction</li>
+            <li>Visual verification results</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>Running the Web Client</h2>
+      <div class="steps">
+        <div class="step">
+          <h3>1. Prerequisites</h3>
+          <p>Make sure you have Python 3.6+ installed</p>
+        </div>
+        
+        <div class="step">
+          <h3>2. Install Requirements</h3>
+          <pre><code class="language-bash">pip install -r requirements.txt</code></pre>
+        </div>
+        
+        <div class="step">
+          <h3>3. Run the Web Server</h3>
+          <pre><code class="language-bash">python -m client</code></pre>
+        </div>
+        
+        <div class="step">
+          <h3>4. Access the Interface</h3>
+          <pre><code class="language-bash">http://localhost:5000</code></pre>
+          <p>Open this URL in your web browser</p>
+        </div>
+      </div>
+
+      <h2>API Endpoints</h2>
+      <div class="endpoint">
+        <h3>POST /split</h3>
+        <p>Split a secret into shares.</p>
+        <p><strong>Parameters:</strong></p>
+        <ul>
+          <li><code>secret</code>: The secret text to split (required)</li>
+          <li><code>threshold</code>: Minimum shares needed (default: 2)</li>
+          <li><code>shares</code>: Total shares to generate (default: 3)</li>
+          <li><code>verify</code>: Verify reconstruction (default: true)</li>
+        </ul>
+      </div>
+
+      <div class="endpoint">
+        <h3>POST /combine</h3>
+        <p>Reconstruct a secret from shares.</p>
+        <p><strong>Parameters:</strong></p>
+        <ul>
+          <li><code>shares_text</code>: Pasted shares (one per line)</li>
+          <li><code>shares_file</code>: File containing shares</li>
+          <li><code>hash</code>: Original hash for verification (optional)</li>
+        </ul>
+      </div>
+
+      <h2>Security Considerations</h2>
+      <div class="warning-box">
+        <p><strong>Important:</strong> While the web interface is secure, consider these factors:</p>
+        <ul>
+          <li>Secrets are processed server-side - only use trusted instances</li>
+          <li>For maximum security, run locally or on trusted networks</li>
+          <li>Browser caching may store sensitive information</li>
+          <li>Use HTTPS in production environments</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Shamir Secret Sharing Project | MIT License</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>
