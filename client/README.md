@@ -2,19 +2,9 @@
 
 ## Setup
 
-1. Make sure you have Python 3.6+ installed
+1. Make sure you have [uv](https://docs.astral.sh/uv/) installed
 
-2. Install the requirements:
-   ```
-   pip install -r requirements.txt
-   ```
-
-3. Run the web server:
-   ```
-   python -m client
-   ```
-
-4. Open your browser and navigate to:
-   ```
-   http://localhost:5000
-   ```
+2. Run app using uv
+```
+uv run python -m app
+```
