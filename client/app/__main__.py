@@ -251,4 +251,4 @@ if __name__ == "__main__":
     os.makedirs(os.path.join(os.path.dirname(__file__), 'static', 'images'), exist_ok=True)
     
     # Run the app
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)

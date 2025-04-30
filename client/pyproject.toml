@@ -1,0 +1,14 @@
+[project]
+name = "client"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.0",
+    "itsdangerous>=2.2.0",
+    "jinja2>=3.1.6",
+    "markupsafe>=3.0.2",
+    "shamir-ss>=0.2.1",
+    "werkzeug>=3.1.3",
+]
