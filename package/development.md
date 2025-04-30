@@ -40,7 +40,7 @@ poetry build
 You can obtain .so file in `buid/lib.*`
 ### 2. Move .so file in `shamir_ss`
 ```bash
-mv buid/lib.*/*.so shamir_ss/
+mv buid/lib.*/shamir_ss/*.so shamir_ss/
 ```
 ### 3. Use builded package
 ```bash
