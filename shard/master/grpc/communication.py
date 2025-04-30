@@ -31,7 +31,6 @@ async def store_key(user_id: str, key: str, value: str, k: int = 2, n: int = 3) 
 
     success_slaves = []
 
-    key = cf.Key(key=key)
     for slave in slaves:
         # All parts in are slaves
         if len(success_slaves) == n: break
@@ -40,7 +39,7 @@ async def store_key(user_id: str, key: str, value: str, k: int = 2, n: int = 3) 
 
         with grpc.insecure_channel(slave.host) as channel:
             stub = cf_grpc.SlaveStub(channel)
-            part = cf.SecretPart(key=key, part=part_to_save)
+            part = cf.SecretPart(key=cf.Key(key=key), part=part_to_save)
             # Try to store
             try:
                 result = stub.PutSecretPart(part)
@@ -72,6 +71,7 @@ async def get_key(user_id: str, key: str) -> str:
     3. Request 'required_parts' number of Slaves for parts
     4. Reconstruct and return secret
     """
+    # TODO split code
     session = next(get_db())
     secret_manager = SecretManager(session)
 

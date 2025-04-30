@@ -5,6 +5,7 @@ import grpc
 import shard.resources.generated.master_pb2 as cf_master
 import shard.resources.generated.master_pb2_grpc as cf_grpc_master
 import shard.resources.generated.slave_pb2_grpc as cf_grpc
+from shard.slave.db import init_database
 from shard.slave.grpc.server import SlaveServer
 
 
@@ -22,11 +23,13 @@ def connect_to_master(master_host: str, self_port: int) -> bool:
             print("Failed to connect to Master.")
             return False
 
+
 def start(master_host: str, grpc_port: int):
     """
     Start Slave's gRPC server
     Connect to the Master
     """
+    init_database(str(grpc_port))
 
     connected = connect_to_master(master_host, grpc_port)
 
