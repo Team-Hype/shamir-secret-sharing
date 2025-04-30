@@ -20,7 +20,7 @@
 ### Automation & CI/CD
  - [x] ~~Python package deployment~~
  - [x] ~~CI with Tests~~
- - [ ] Docker compose for Shard
+ - [x] ~~Docker compose for Shard~~
  - [x] ~~Pre-commit linters & formatters~~
 
 ### Validation [checklist](requirements.md)
