@@ -5,31 +5,71 @@ _PRIME = 2**127-1
 _RINT = functools.partial(secrets.SystemRandom().randint, 0)
 
 
-def generate_text_shares(text: str, minimum: int, shares: int, prime: int = _PRIME):
+def generate_text_shares(
+    text: str,
+    minimum: int,
+    shares: int,
+    *,
+    prime: int = _PRIME,
+    verbose: bool = False
+):
     """Generate shares for long text with proper padding"""
+    if verbose:
+        max_chunk_size = (prime.bit_length() + 7) // 8
+        print(f"Using prime (bit length: {prime.bit_length()}, "
+              f"chunk size: {max_chunk_size} bytes)")
+
     chunks = text_to_chunks(text, prime)
+    if verbose:
+        print(f"Split text into {len(chunks)} chunks.")
+        print(f"Generating {shares} shares with a threshold of {minimum}...")
 
     all_shares = []
-    for chunk in chunks:
+    for chunk_idx, chunk in enumerate(chunks):
+        if verbose:
+            print(f"Processing chunk {chunk_idx + 1}/{len(chunks)}...")
         chunk_shares = generate_shares(chunk, minimum, shares, prime)
         all_shares.append(chunk_shares)
 
-    return [(i+1, [s[1] for s in [share[i] for share in all_shares]])
-            for i in range(shares)]
+    combined = [
+        (i + 1, [share[i][1] for share in all_shares])
+        for i in range(shares)
+    ]
+    if verbose:
+        print("Successfully generated all shares.")
+    return combined
 
 
-def reconstruct_text_secret(shares: list, prime: int = _PRIME) -> str:
+def reconstruct_text_secret(
+    shares: list,
+    *,
+    prime: int = _PRIME,
+    verbose: bool = False
+) -> str:
     """Reconstruct text from shares with padding removal"""
     if not shares:
         raise ValueError("No shares provided")
 
+    if verbose:
+        print(f"Reconstructing from {len(shares)} shares.")
+
     num_chunks = len(shares[0][1])
+    if verbose:
+        max_chunk_size = (prime.bit_length() + 7) // 8
+        print(f"Prime bit length: {prime.bit_length()}, "
+              f"chunk size: {max_chunk_size} bytes")
+        print(f"Reconstructing {num_chunks} chunks...")
+
     reconstructed = []
-
     for chunk_idx in range(num_chunks):
+        if verbose:
+            print(f"Chunk {chunk_idx + 1}/{num_chunks}...")
         chunk_shares = [(s[0], s[1][chunk_idx]) for s in shares]
-        reconstructed.append(reconstruct_secret(chunk_shares, prime))
+        secret_chunk = reconstruct_secret(chunk_shares, prime)
+        reconstructed.append(secret_chunk)
 
+    if verbose:
+        print("All chunks reconstructed. Decoding text...")
     return chunks_to_text(reconstructed, prime)
 
 

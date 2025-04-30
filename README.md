@@ -18,7 +18,7 @@
 ### Validation [checklist](requirements.md)
  - [x] ~~Hash the input and reconstructed secrets to confirm integrity~~
  - [x] ~~Attempt reconstruction with insufficient shares (should fail)~~
- - [ ] Log generation and reconstruction steps for auditability
+ - [x] ~~Log generation and reconstruction steps for auditability~~
 
 ## Project organization
 ```
