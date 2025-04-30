@@ -4,7 +4,9 @@ service Master {
   rpc Connect(ConnectionRequest) returns (ConnectionResponse);
 }
 
-message ConnectionRequest {}
+message ConnectionRequest {
+  int32 port = 1;
+}
 
 message ConnectionResponse {
   bool approve = 1;

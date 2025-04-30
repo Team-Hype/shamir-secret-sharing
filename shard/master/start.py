@@ -1,9 +1,11 @@
 import asyncio
 import signal
-import uvicorn
+
 import grpc
+import uvicorn
 
 import shard.resources.generated.master_pb2_grpc as cf_grpc
+from shard.master.db import init_database
 from shard.master.grpc.server import MasterServer
 
 
@@ -43,6 +45,8 @@ async def start(http_port: int = 8000, grpc_port: int = 50051):
      - Create stop asyncio event
      - Start gRPC and HTTP server.
     """
+    init_database()
+
     stop_event = asyncio.Event()
 
     loop = asyncio.get_running_loop()

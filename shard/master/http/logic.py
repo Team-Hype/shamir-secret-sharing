@@ -1,13 +1,16 @@
-from shard.master.db import Session
-from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
+
 from fastapi import Depends, status, HTTPException
-from shard.master.http.constants import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
-from shard.master.db.models import User
+from sqlalchemy.orm import Session
+
 from shard.master.db import get_db
+from shard.master.db.models import User
+from shard.master.http.constants import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()

@@ -8,20 +8,24 @@ class MasterServer(cf_grpc.MasterServicer):
 
     def Connect(self, request: cf.ConnectionRequest, context: grpc.ServicerContext):
         # TODO pretty
-        peer = context.peer()  # 'ipv4:127.0.0.1:50000'
-        print(f"Client peer: {peer}")
+        peer = context.peer()
+        port = request.port
 
         if peer.startswith('ipv4:'):
-            ip_port = peer.split(':', 1)[1]
-            ip, port = ip_port.rsplit(':', 1)
+            ip = peer.split(':')[1]
         else:
-            ip, port = 'unknown', 'unknown'
+            ip = 'unknown'
 
-        print(f"Client IP: {ip}, Port: {port}")
+        host = f"{ip}:{port}"
+
+        print(f"Client host: {host}")
 
         from shard.master.db.managers import SlaveManager
         from shard.master.db import get_db
+
         slave_manager = SlaveManager(session=next(get_db()))
-        slave_manager.add(ip)
+
+        if slave_manager.get(host) is None:
+            slave_manager.add(f"{ip}:{port}")
 
         return cf.ConnectionResponse(approve=True)
