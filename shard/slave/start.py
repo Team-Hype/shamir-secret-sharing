@@ -24,12 +24,12 @@ def connect_to_master(master_host: str, self_port: int) -> bool:
             return False
 
 
-def start(master_host: str, grpc_port: int):
+def start(db_path, log_file, master_host: str, grpc_port: int):
     """
     Start Slave's gRPC server
     Connect to the Master
     """
-    init_database(str(grpc_port))
+    init_database(db_path, log_file)
 
     connected = connect_to_master(master_host, grpc_port)
 
