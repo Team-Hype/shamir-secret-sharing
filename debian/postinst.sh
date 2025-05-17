@@ -34,6 +34,10 @@ pip install poetry
 cd "$shard_path"
 poetry install --no-root
 
+echo "[postinst] Building proto files"
+cd shard
+resources/scripts/proto_build.sh
+
 echo "[postinst] Done."
 
 exit 0
