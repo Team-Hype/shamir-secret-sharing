@@ -1,0 +1,18 @@
+[Unit]
+Description=Shard Distributed Secret Vault
+After=network.target
+
+[Service]
+Type=simple
+User=shard
+Group=shard
+WorkingDirectory=/usr/local/shard
+ExecStart=/usr/local/shard/venv/bin/python -m shard --config /etc/shard/config.ini
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=append:/var/log/shard/shard.log
+StandardError=append:/var/log/shard/shard.err.log
+
+[Install]
+WantedBy=multi-user.target

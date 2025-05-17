@@ -1,0 +1,71 @@
+name: Build DEB package
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Get version from pyproject.toml
+        id: get_version
+        run: echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
+
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y ruby ruby-dev build-essential python3
+
+      - name: Install FPM
+        run: sudo gem install --no-document fpm
+
+      - name: Prepare package structure
+        run: |
+          mkdir -p build/usr/local/shard
+          mkdir -p build/etc/shard
+          mkdir -p build/var/log/shard
+          mkdir -p build/lib/systemd/system
+
+          cp -r shard/* build/usr/local/shard/
+          cp shard/pyproject.toml shard/poetry.lock build/usr/local/shard/
+          cp debian/config.ini build/etc/shard/
+          cp debian/shard.service build/lib/systemd/system/
+          cp debian/postinst.sh .
+
+      - name: Build .deb
+        run: |
+          fpm -s dir -t deb \
+            -n shard \
+            -v $VERSION \
+            --prefix / \
+            --deb-systemd build/lib/systemd/system/shard.service \
+            --after-install postinst.sh \
+            build/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shard-deb
+          path: ./shard_${{ env.VERSION }}_amd64.deb
+
+      - name: Upload to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./shard_${{ env.VERSION }}_amd64.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
