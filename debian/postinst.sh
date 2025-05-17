@@ -3,7 +3,9 @@
 set -e
 
 echo "[postinst] Creating shard user if not exists..."
-id -u shard &>/dev/null || useradd -r -s /bin/false shard
+if ! id "shard" &>/dev/null; then
+    useradd --system --no-create-home --shell /usr/sbin/nologin shard
+fi
 
 echo "[postinst] Setting permissions..."
 chown -R shard:shard /usr/local/shard
