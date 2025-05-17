@@ -45,6 +45,7 @@ jobs:
           cp debian/config.ini build/etc/shard/
           cp debian/shard.service build/lib/systemd/system/
           cp debian/postinst.sh .
+          cp debian/postrm.sh .
 
       - name: Build .deb
         run: |
@@ -54,6 +55,7 @@ jobs:
             --architecture amd64 \
             --prefix / \
             --after-install postinst.sh \
+            --after-remove postrm.sh \
             -C build .
 
       - name: Upload artifact
