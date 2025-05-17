@@ -4,8 +4,6 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches: ["**"]  # On push to any branch
   release:
     types: [published]
 
