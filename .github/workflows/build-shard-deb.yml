@@ -65,7 +65,7 @@ jobs:
           path: ./shard_${{ env.VERSION }}_amd64.deb
 
       - name: Upload to GitHub Release
-        if: github.event_name == 'release' && github.event.release.target_commitish == 'main' # Only on main branch
+        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
           files: ./shard_${{ env.VERSION }}_amd64.deb
