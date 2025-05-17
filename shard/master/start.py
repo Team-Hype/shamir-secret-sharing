@@ -40,12 +40,12 @@ async def start_fastapi_server(port: int, stop_event: asyncio.Event):
     await server_task
 
 
-async def start(http_port: int = 8000, grpc_port: int = 50051):
+async def start(db_path, log_file, http_port: int = 8000, grpc_port: int = 50051):
     """
      - Create stop asyncio event
      - Start gRPC and HTTP server.
     """
-    init_database()
+    init_database(db_path, log_file)
 
     stop_event = asyncio.Event()
 

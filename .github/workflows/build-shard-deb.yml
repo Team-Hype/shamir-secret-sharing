@@ -4,8 +4,6 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches: [ main ]
   release:
     types: [published]
 
@@ -22,7 +20,7 @@ jobs:
 
       - name: Get version from pyproject.toml
         id: get_version
-        run: echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
+        run: echo "VERSION=$(cd shard && poetry version -s)" >> $GITHUB_ENV
 
 
       - name: Install dependencies
@@ -35,26 +33,28 @@ jobs:
 
       - name: Prepare package structure
         run: |
-          mkdir -p build/usr/local/shard
+          mkdir -p build/opt/shard
           mkdir -p build/etc/shard
           mkdir -p build/var/log/shard
           mkdir -p build/lib/systemd/system
 
-          cp -r shard/* build/usr/local/shard/
-          cp shard/pyproject.toml shard/poetry.lock build/usr/local/shard/
+          cp -r shard build/opt/shard/
+          cp shard/poetry.lock shard/pyproject.toml build/opt/shard/
           cp debian/config.ini build/etc/shard/
           cp debian/shard.service build/lib/systemd/system/
           cp debian/postinst.sh .
+          cp debian/postrm.sh .
 
       - name: Build .deb
         run: |
           fpm -s dir -t deb \
             -n shard \
             -v $VERSION \
+            --architecture amd64 \
             --prefix / \
-            --deb-systemd build/lib/systemd/system/shard.service \
             --after-install postinst.sh \
-            build/
+            --after-remove postrm.sh \
+            -C build .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -63,7 +63,7 @@ jobs:
           path: ./shard_${{ env.VERSION }}_amd64.deb
 
       - name: Upload to GitHub Release
-        if: github.event_name == 'release'
+        if: github.event_name == 'release' && github.event.release.target_commitish == 'main' # Only on main branch
         uses: softprops/action-gh-release@v2
         with:
           files: ./shard_${{ env.VERSION }}_amd64.deb

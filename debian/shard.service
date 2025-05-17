@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 User=shard
 Group=shard
-WorkingDirectory=/usr/local/shard
-ExecStart=/usr/local/shard/venv/bin/python -m shard --config /etc/shard/config.ini
+WorkingDirectory=/opt/shard
+ExecStart=/opt/shard/venv/bin/python -m shard --config /etc/shard/config.ini
 Restart=on-failure
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1

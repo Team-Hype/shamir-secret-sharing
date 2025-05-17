@@ -5,6 +5,7 @@ from pathlib import Path
 
 import shard.master as master
 import shard.slave as slave
+from shard.config import read_config, AppConfig
 
 
 class MainStarter:
@@ -13,31 +14,27 @@ class MainStarter:
      - Start appropriate mode
     """
     def start(self):
-        mode, port, master_host = self.__parse_args()
+        mode, port, master_host, config = self.__parse_args()
 
         if mode == 'master':
-            asyncio.run(self.__start_master(port))
+            asyncio.run(self.__start_master(port, config.db_path, config.logging.sqlalchemy_log_file))
         elif mode == 'slave':
-            self.__start_slave(master_host, port)
+            self.__start_slave(master_host, port, config.db_path, config.logging.sqlalchemy_log_file)
         else:
             print('unknown mode')
 
-    def __parse_args(self) -> (str, int, str):
+    def __parse_args(self) -> tuple[str, int, str, AppConfig]:
         config_parser = argparse.ArgumentParser(add_help=False)
         config_parser.add_argument('--config', default=None)
         config_args, remaining_argv = config_parser.parse_known_args()
 
         cli_args = remaining_argv
 
+        config = read_config(config_args.config)
+
         # If --config is specified, read arguments from config
         if config_args.config:
-            config_path = Path(config_args.config)
-            if not config_path.exists():
-                print(f"Config file {config_path} not found.")
-                sys.exit(1)
-            with open(config_path) as f:
-                config_line = f.read().strip()
-                cli_args = config_line.split()
+            cli_args = config.args.split()
 
         parser = argparse.ArgumentParser(description="SHamir Algorithm Reliable Distributed")
 
@@ -47,16 +44,16 @@ class MainStarter:
 
         args = parser.parse_args(cli_args)
 
-        return args.mode, int(args.port), args.master_host
+        return str(args.mode), int(args.port), str(args.master_host), config
 
-    async def __start_master(self, grpc_port: int):
+    async def __start_master(self, grpc_port: int, db_path, log_file):
         print("Starting in MASTER mode...")
         # TODO request http_port from user
-        await master.start(5050, grpc_port)
+        await master.start(db_path, log_file, 5050, grpc_port)
 
-    def __start_slave(self, master_host: str, port: int):
+    def __start_slave(self, master_host: str, port: int, db_file, log_file):
         print("Starting in SLAVE mode...")
-        slave.start(master_host, port)
+        slave.start(db_file, log_file, master_host, port)
 
 
 if __name__ == '__main__':

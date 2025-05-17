@@ -8,10 +8,9 @@ from shard.master.db.models.base import Base
 
 _engine = None
 _Session = None
-log_file = "var/log/shard/sqlalchemy.log"
 
 
-def init_database():
+def init_database(db_path, log_file):
     global _engine, _Session
 
     logger = logging.getLogger('sqlalchemy.engine')
@@ -24,7 +23,7 @@ def init_database():
         logger.addHandler(file_handler)
 
     _engine = create_engine(
-        'sqlite:///master.db',
+        f'sqlite:///{db_path}',
         echo=False  # Output only to logger, True for stdout
     )
     _Session = sessionmaker(bind=_engine)

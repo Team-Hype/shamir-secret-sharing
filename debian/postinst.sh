@@ -1,27 +1,43 @@
 #!/bin/bash
 
-set -e
+set -xe
+
+shard_path="/opt/shard"
+log_path="/var/log/shard"
 
 echo "[postinst] Creating shard user if not exists..."
-id -u shard &>/dev/null || useradd -r -s /bin/false shard
+if ! id "shard" &>/dev/null; then
+    useradd --system --no-create-home --shell /usr/sbin/nologin shard || {
+        echo "[postinst] Failed to add user" >&2
+        exit 1
+    }
+    echo "[postinst] User 'shard' created"
+else
+    echo "[postinst] User 'shard' already exists"
+fi
+
+echo "[postinst] Ensuring log directory exists..."
+mkdir -p "$log_path"
 
 echo "[postinst] Setting permissions..."
-chown -R shard:shard /usr/local/shard
-chown -R shard:shard /var/log/shard
+chown -R shard:shard "$shard_path"
+chown -R shard:shard "$log_path"
 
 echo "[postinst] Creating virtualenv..."
-python3 -m venv /usr/local/shard/venv
-source /usr/local/shard/venv/bin/activate
-pip install --upgrade pip
+python3 -m venv "$shard_path/venv"
 
 echo "[postinst] Installing dependencies..."
+source "$shard_path/venv/bin/activate"
+pip install --upgrade pip
 pip install poetry
-cd /usr/local/shard/shard
-poetry install --no-root --no-dev
 
-echo "[postinst] Enabling and starting service..."
-systemctl daemon-reload
-systemctl enable shard
-systemctl restart shard
+cd "$shard_path"
+poetry install --no-root
+
+echo "[postinst] Building proto files"
+cd shard
+resources/scripts/proto_build.sh
+
+echo "[postinst] Done."
 
 exit 0
