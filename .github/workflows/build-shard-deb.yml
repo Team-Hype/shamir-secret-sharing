@@ -35,13 +35,13 @@ jobs:
 
       - name: Prepare package structure
         run: |
-          mkdir -p build/usr/local/shard
+          mkdir -p build/opt/shard
           mkdir -p build/etc/shard
           mkdir -p build/var/log/shard
           mkdir -p build/lib/systemd/system
 
-          cp -r shard/* build/usr/local/shard/
-          cp shard/pyproject.toml shard/poetry.lock build/usr/local/shard/
+          cp -r shard build/opt/shard/
+          cp shard/poetry.lock shard/pyproject.toml build/opt/shard/
           cp debian/config.ini build/etc/shard/
           cp debian/shard.service build/lib/systemd/system/
           cp debian/postinst.sh .
@@ -51,10 +51,10 @@ jobs:
           fpm -s dir -t deb \
             -n shard \
             -v $VERSION \
+            --architecture amd64 \
             --prefix / \
-            --deb-systemd build/lib/systemd/system/shard.service \
             --after-install postinst.sh \
-            build/
+            -C build .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

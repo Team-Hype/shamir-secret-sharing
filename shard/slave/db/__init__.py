@@ -9,7 +9,7 @@ from shard.slave.db.models import *
 
 _engine = None
 _Session = None
-log_file = "var/log/shard/sqlalchemy.log"
+log_file = "/var/log/shard/sqlalchemy.log"
 
 
 def init_database(name: str):
