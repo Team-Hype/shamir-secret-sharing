@@ -5,7 +5,7 @@ permissions:
 
 on:
   push:
-    branches: [ main ]
+    branches: ["**"]  # On push to any branch
   release:
     types: [published]
 
@@ -22,7 +22,7 @@ jobs:
 
       - name: Get version from pyproject.toml
         id: get_version
-        run: echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
+        run: echo "VERSION=$(cd shard && poetry version -s)" >> $GITHUB_ENV
 
 
       - name: Install dependencies
@@ -63,7 +63,7 @@ jobs:
           path: ./shard_${{ env.VERSION }}_amd64.deb
 
       - name: Upload to GitHub Release
-        if: github.event_name == 'release'
+        if: github.event_name == 'release' && github.event.release.target_commitish == 'main' # Only on main branch
         uses: softprops/action-gh-release@v2
         with:
           files: ./shard_${{ env.VERSION }}_amd64.deb
