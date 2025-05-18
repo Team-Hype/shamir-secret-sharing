@@ -1,6 +1,6 @@
 [project]
 name = "shamir-ss"
-version = "0.2.2"
+version = "0.2.3"
 description = "Shamir's Secret Sharing implementation using Cython"
 readme = "README.md"
 requires-python = ">=3.9"
